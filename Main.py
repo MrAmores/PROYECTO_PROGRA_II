@@ -1,5 +1,6 @@
 
 from Pasajero import Pasajero
+from Cabina import Cabina
 
 def mostrar_menu_principal():
     opc = 0
@@ -64,15 +65,14 @@ def mostrar_menu_pasajero():
             
             if opcion == 1:
                 objPasajero.capturaDatos()
-                objPasajero.ingresaPasajero()
             elif opcion == 2:
-                pass
                 # modificar()
-            elif opcion == 3:
                 pass
-                # desactivar()
+            elif opcion == 3:
+                Pasajero.select_pasajero()
+                objPasajero.desactivar(input("Ingrese la identificación del usaurio que desea desactivar: "))
             elif opcion == 4:
-                # listar()
+                objPasajero.listar()
                 pass
             elif opcion == 5:
                 break
@@ -116,6 +116,7 @@ def mostrar_menu_trabajador():
             print(f"Error: {e}. Intente ingresar un número válido.")
 
 def mostrar_menu_cabina():
+    objCabina = Cabina(idCabina=None,capacidad=None,disponibilidad=None,tamanho=None,precio=None)
     while True:
         print("""
         ------------------------------
@@ -132,8 +133,9 @@ def mostrar_menu_cabina():
             opcion = int(input("Selecione una opción: ")) 
             
             if opcion == 1:
-                pass
-                # registrar()
+                objCabina.capturaDatos()
+                objCabina.ingresaCabina()
+                pass 
             elif opcion == 2:
                 pass
                 # modificar()
@@ -141,8 +143,7 @@ def mostrar_menu_cabina():
                 pass
                 # desactivar()
             elif opcion == 4:
-                # listar()
-                pass
+                objCabina.listar()
             elif opcion == 5:
                 break 
             else:
