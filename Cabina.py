@@ -80,18 +80,29 @@ class Cabina():
         Cabina.conexion.commit()
         print("Se ha ingresado la cabina exitosamente.")
 
-    def modificaCabina(capacidad, disponibilidad, tamanho, precio, id):
+    def modificar(self):
         # Consulta SQL de modificación
         modificar = ("update cabina set capacidad = %s, "
-                     "disponibilidad = %s, "
-                     "tamanho = %s,"
-                     "precio = %s,"
-                     "where idCabina = %s")
+         "disponibilidad = %s, "
+         "tamanho = %s,"
+         "precio = %s,"
+         "where idCabina = %s")
         datos = (capacidad, disponibilidad, tamanho, precio, id)
         # Ejecutar la consulta y modificar datos
         Cabina.miconexion.execute(modificar, datos)
         Cabina.conexion.commit()
         print("Se han modificado los datos de la cabina exitosamente.")
+    
+    def listar(self):
+        print("Listado de cabinas en el sistema:")
+        # Execute query and list data
+        Cabina.miconexion.execute("select * from cabina")
+        datos = Cabina.miconexion.fetchall()
+        for i in datos:
+            print(f"ID Cabina: {i[0]}, Capacidad: {i[1]}, Disponibilidad: {i[2]}, Tamaño: {i[3]}, Precio: {i[4]}")
+
+    def desactivar(self):
+        pass
         
     @staticmethod
     def obtener_cabinas_disponibles(acompanantes):
@@ -115,24 +126,10 @@ class Cabina():
                     print(f"ID: {cabina[0]}, Capacidad: {cabina[1]}, Disponibilidad: {cabina[2]}, Tamaño: {cabina[3]}, Precio: {cabina[4]}")
                     
             return ids_disponibles
-
+        
     @staticmethod
     def pasar_cabina_a_ocupada(id_Cabina):
         update = ("UPDATE cabina SET disponibilidad = FALSE WHERE idCabina = %s  ")
         Cabina.miconexion.execute(update,(id_Cabina,))
         Cabina.conexion.commit()
-    
-    def modificar(self):
-        pass
-    
-    def listar(self):
-        print("Listado de cabinas en el sistema:")
-        # Execute query and list data
-        Cabina.miconexion.execute("select * from cabina")
-        datos = Cabina.miconexion.fetchall()
-        for i in datos:
-            print(f"ID Cabina: {i[0]}, Capacidad: {i[1]}, Disponibilidad: {i[2]}, Tamaño: {i[3]}, Precio: {i[4]}")
-
-    def desactivar(self):
-        pass
     
