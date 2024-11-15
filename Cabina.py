@@ -80,12 +80,12 @@ class Cabina():
         Cabina.conexion.commit()
         print("Se ha ingresado la cabina exitosamente.")
 
-    def modificar(self):
+    def modificar(self,capacidad, disponibilidad, tamanho, precio, id):
         # Consulta SQL de modificación
         modificar = ("update cabina set capacidad = %s, "
          "disponibilidad = %s, "
          "tamanho = %s,"
-         "precio = %s,"
+         "precio = %s"
          "where idCabina = %s")
         datos = (capacidad, disponibilidad, tamanho, precio, id)
         # Ejecutar la consulta y modificar datos
@@ -101,8 +101,13 @@ class Cabina():
         for i in datos:
             print(f"ID Cabina: {i[0]}, Capacidad: {i[1]}, Disponibilidad: {i[2]}, Tamaño: {i[3]}, Precio: {i[4]}")
 
-    def desactivar(self):
-        pass
+    def desactivar(self,id):
+        modificar = "UPDATE cabina SET disponibilidad = %s WHERE idCabina = %s"
+        datos = (False, id)
+        # Ejecutar la consulta y inactivar datos
+        Cabina.miconexion.execute(modificar, datos)
+        Cabina.conexion.commit()
+        print("Se ha borrado la cabina exitosamente.")
         
     @staticmethod
     def obtener_cabinas_disponibles(acompanantes):
@@ -132,4 +137,12 @@ class Cabina():
         update = ("UPDATE cabina SET disponibilidad = FALSE WHERE idCabina = %s  ")
         Cabina.miconexion.execute(update,(id_Cabina,))
         Cabina.conexion.commit()
+        
+    @staticmethod
+    def select_cabina():
+        # Query para obtener las cabinas
+        consulta = "SELECT idCabina, capacidad, tamanho, disponibilidad, precio FROM cabina"
+        Cabina.miconexion.execute(consulta)
+        cabinas = Cabina.miconexion.fetchall()  # Retorna lista de tuplas
+        return cabinas
     
