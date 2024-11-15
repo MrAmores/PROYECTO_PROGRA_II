@@ -69,4 +69,4 @@ class Trabajador(Persona):
         pass
 
     def desactivar(self):
-        pass
+        print("hhhhhh")
