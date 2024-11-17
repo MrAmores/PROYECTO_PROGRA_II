@@ -11,40 +11,41 @@ class Cabina():
         self.precio = precio
 
     def capturaDatos(self):
-    # Validation of idCabina
+        # Validation of idCabina
         while True:
             try:
                 self.idCabina = int(input("Digite el ID de la cabina: ").strip())
                 # Check if the idCabina already exists in the database
                 Cabina.miconexion.execute("SELECT COUNT(*) FROM cabina WHERE idCabina = %s", (self.idCabina,))
                 if Cabina.miconexion.fetchone()[0] > 0:
-                    print("El ID de la cabina ya existe. Por favor, ingrese un ID único.")
+                    print("\n----El ID de la cabina ya existe. Por favor, ingrese un ID único----\n")
                 elif self.idCabina < 0:
-                    print("No se permiten números negativos.")
+                    print("\n----No se permiten números negativos----\n")
                 else:
                     self.disponibilidad = True
                     break
             except ValueError:
-                print("Entrada inválida. El ID de la cabina debe de ser un número entero.")
+                print("\n----Entrada inválida. El ID de la cabina debe de ser un número entero----\n")
                         
         # Validation of capacity
         while True:
             try:
                 self.capacidad = int(input("Digite la capacidad de personas que permite la cabina: ").strip())
                 if self.capacidad <= 0:
-                    print("La cabina por lo menos debe tener capacidad para un pasajero.")
+                    print("\n----La cabina por lo menos debe tener capacidad para un pasajero----\n")
                 else:
                     break
             except ValueError:
-                print("Entrada inválida. Por favor, ingrese un número.")
+                print("\n----Entrada inválida. Por favor, ingrese un número----\n")
         
         # Validation of size
         while True:
-            print("Seleccione el tamaño de la cabina:")
-            print("1 - Pequeña")
-            print("2 - Mediana")
-            print("3 - Grande")
-            
+            print("""
+            Seleccione el tamaño de la cabina:
+            1 - Pequeña
+            2 - Mediana
+            3 - Grande
+            """)
             opcion = input("Digite el número correspondiente al tamaño de la cabina: ").strip()
             if opcion == "1":
                 self.tamanho = "Pequeña"
@@ -56,8 +57,8 @@ class Cabina():
                 self.tamanho = "Grande"
                 break
             else:
-                print("Opción inválida. Por favor, seleccione 1, 2 o 3.")
-                    
+                print("\n----Opción inválida. Por favor, seleccione 1, 2 o 3----\n")         
+
         # Validation of price
         while True:
             try:
@@ -67,9 +68,10 @@ class Cabina():
                     self.precio = precio
                     break
                 else:
-                    print("El precio debe ser un número positivo.")
+                    print("\n----El precio debe ser un número positivo----\n")
             except ValueError:
-                print("Entrada inválida. Por favor, ingrese un número.")
+                print("\n----Entrada inválida. Por favor, ingrese un número----\n")
+
 
     def ingresaCabina(self):
         # Consulta SQL de inserción
@@ -78,7 +80,9 @@ class Cabina():
         # Ejecutar la consulta e ingresar datos
         Cabina.miconexion.execute(ingreso, datos)
         Cabina.conexion.commit()
+        print("\n=======================================")
         print("Se ha ingresado la cabina exitosamente.")
+        print("=======================================\n")
 
     def modificar(self,capacidad, disponibilidad, tamanho, precio, id):
         # Consulta SQL de modificación
@@ -91,10 +95,11 @@ class Cabina():
         # Ejecutar la consulta y modificar datos
         Cabina.miconexion.execute(modificar, datos)
         Cabina.conexion.commit()
+        print("\n======================================================")
         print("Se han modificado los datos de la cabina exitosamente.")
-    
+        print("======================================================\n")
     def listar(self):
-        print("Listado de cabinas en el sistema:")
+        print("\nListado de cabinas en el sistema:")
         # Execute query and list data
         Cabina.miconexion.execute("select * from cabina")
         datos = Cabina.miconexion.fetchall()
@@ -107,7 +112,9 @@ class Cabina():
         # Ejecutar la consulta y inactivar datos
         Cabina.miconexion.execute(modificar, datos)
         Cabina.conexion.commit()
+        print("\n=====================================")
         print("Se ha borrado la cabina exitosamente.")
+        print("=====================================\n")
         
     @staticmethod
     def obtener_cabinas_disponibles(acompanantes):

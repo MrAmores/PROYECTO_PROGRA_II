@@ -59,23 +59,111 @@ def mostrar_menu_pasajero():
         ------------------------------
         """)
         try:
-            opcion = int(input("Selecione una opción: ")) 
+            opcion = int(input("Seleccione una opción: "))
             if opcion == 1:
                 objPasajero.capturaDatos()
             elif opcion == 2:
-                # modificar()
-                pass
+                # Option to modify a passenger
+                pasajeros = Pasajero.select_pasajero()  # Get the list of passengers as tuples
+                if not pasajeros:
+                    print("\n----No hay pasajeros registrados en el sistema para modificar----\n")
+                else:
+                    ids_validos = [pasajero[0] for pasajero in pasajeros]  # Extract valid IDs from the tuples
+                    print("Listado de pasajeros en el sistema:")
+                    for pasajero in pasajeros:
+                        print(f"ID Pasajero: {pasajero[0]}, Nombre: {pasajero[1]}, Apellidos: {pasajero[2]}, Año de nacimiento: {pasajero[3]}, Genero: {pasajero[4]}")
+
+                    # Validate the entered passenger ID
+                    while True:
+                        try:
+                            id_pasajero = input("Digite el ID del pasajero que desea modificar: ").strip()
+                            if id_pasajero in ids_validos:
+                                break
+                            else:
+                                print("\n----El ID ingresado no es válido. Debe pertenecer a la lista mostrada----\n")
+                        except ValueError:
+                            print("\n----Entrada inválida. Por favor, ingrese un ID válido----\n")
+
+                    # Validate the new first name
+                    while True:
+                        nuevo_nombre = input("Digite el nuevo nombre del pasajero: ").strip()
+                        if nuevo_nombre:
+                            break
+                        else:
+                            print("\n----El nombre no puede estar vacío o contener solo espacios----\n")
+
+                    # Validate the new first last name
+                    while True:
+                        nuevo_apellido1 = input("Digite el nuevo primer apellido del pasajero: ").strip()
+                        if nuevo_apellido1:
+                            break
+                        else:
+                            print("\n----El primer apellido no puede estar vacío o contener solo espacios----\n")
+
+                    # Validate the new second last name
+                    while True:
+                        nuevo_apellido2 = input("Digite el nuevo segundo apellido del pasajero: ").strip()
+                        if nuevo_apellido2:
+                            break
+                        else:
+                            print("\n----El segundo apellido no puede estar vacío o contener solo espacios----\n")
+
+                    # Validate the new birth year
+                    while True:
+                        try:
+                            nuevo_anho_nacimiento = int(input("Digite el nuevo año de nacimiento del pasajero: ").strip())
+                            if nuevo_anho_nacimiento > 0:
+                                break
+                            else:
+                                print("\n----El año de nacimiento debe ser un número positivo----\n")
+                        except ValueError:
+                            print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
+
+                    # Validate the new gender
+                    while True:
+                        print("Seleccione el nuevo género del pasajero:")
+                        print("F - Femenino")
+                        print("M - Masculino")
+                        nuevo_genero = input("Digite 'F' para Femenino o 'M' para Masculino: ").strip().upper()
+                        if nuevo_genero == "F":
+                            nuevo_genero = "Femenino"
+                            break
+                        elif nuevo_genero == "M":
+                            nuevo_genero = "Masculino"
+                            break
+                        else:
+                            print("\n----Opción inválida. Por favor, ingrese 'F' o 'M'----\n")
+                    objPasajero.modificar(nuevo_nombre, nuevo_apellido1, nuevo_apellido2, nuevo_anho_nacimiento, nuevo_genero, id_pasajero)
+
+
             elif opcion == 3:
-                Pasajero.select_pasajero()
-                objPasajero.desactivar(input("Ingrese la identificación del usaurio que desea desactivar: "))
+                pasajeros = Pasajero.select_pasajero()  # Obtener lista de cabinas como tuplas
+                if not pasajeros:
+                    print("\n----No hay pasajeros registrados en el sistema para borrar----\n")
+                else:
+                    ids_validos = [pas[0] for pas in pasajeros]  # Extraer IDs válidos de las tuplas
+                    print("\n----Listado de pasajeros en el sistema----")
+                    for pasajero in pasajeros:
+                        print(f"ID Pasajero: {pasajero[0]}, Nombre: {pasajero[1]}, Apellidos: {pasajero[2]}, Año de nacimiento: {pasajero[3]}, Genero: {pasajero[4]}")
+                    print("-------------------------------------------------\n")
+                    # Validar el ID de cabina ingresado
+                    while True:
+                        idPasajero = input("Digite la identificación del pasajero que desea borrar: ").strip()
+                        if idPasajero in ids_validos and idPasajero:
+                            objPasajero.desactivar(idPasajero)
+                            print("\n----El pasajero ha sido desactivado correctamente----\n")
+                            break
+                        else:
+                            print("\n----La identificación ingresada no es válida. Debe pertenecer a la lista mostrada----\n")
             elif opcion == 4:
                 objPasajero.listar()
             elif opcion == 5:
+                print("\n----Saliendo del sistema----\n")
                 break
             else:
-                print("Opción no válida. Intente de nuevo.")
-        except ValueError as e: 
-            print(f"Error: {e}. Intente ingresar un número válido.")   
+                print("\n----Opción no válida. Intente de nuevo----\n")
+        except ValueError as e:
+            print(f"\n----Error: {e}. Intente ingresar un número válido----\n")
 def mostrar_menu_trabajador():
     while True:
         print("""
@@ -132,14 +220,14 @@ def mostrar_menu_cabina():
             elif opcion == 2:
                 cabinas = Cabina.select_cabina()  # Obtener lista de cabinas como tuplas
                 if not cabinas:
-                    print("No hay cabinas registradas en el sistema para modificar.")
+                    print("\n----No hay cabinas registradas en el sistema para modificar----\n")
                     break
                 
                 ids_validos = [cabina[0] for cabina in cabinas]  # Extraer IDs válidos de las tuplas
                 print("Listado de cabinas en el sistema:")
                 for cabina in cabinas:
                     print(f"ID Cabina: {cabina[0]}, Capacidad: {cabina[1]}, "
-                          f"Tamaño: {cabina[2]}, Disponibilidad: {cabina[3]}, Precio: {cabina[4]}")
+                    f"Tamaño: {cabina[2]}, Disponibilidad: {cabina[3]}, Precio: {cabina[4]}")
 
                 # Validar el ID de cabina ingresado
                 while True:
@@ -148,19 +236,19 @@ def mostrar_menu_cabina():
                         if idCabina > 0 and idCabina in ids_validos:
                             break
                         else:
-                            print("El ID ingresado no es válido. Debe ser un número positivo y pertenecer a la lista mostrada.")
+                            print("\n----El ID ingresado no es válido. Debe ser un número positivo y pertenecer a la lista mostrada----\n")
                     except ValueError:
-                        print("Entrada inválida. Por favor, ingrese un número.")
+                        print("\n----Entrada inválida. Por favor, ingrese un número----\n")
                         
                 while True:
                     try:
                         capacidad = int(input("Digite la nueva capacidad de personas que permite la cabina: ").strip())
                         if capacidad <= 0:
-                            print("La cabina por lo menos debe tener capacidad para un pasajero.")
+                            print("\n----La cabina por lo menos debe tener capacidad para un pasajero----\n")
                         else:
                             break
                     except ValueError:
-                        print("Entrada inválida. Por favor, ingrese un número.")
+                        print("\n----Entrada inválida. Por favor, ingrese un número----\n")
                         
                 while True:
                     print("Seleccione el nuevo tamaño de la cabina")
@@ -178,7 +266,7 @@ def mostrar_menu_cabina():
                         tamanho = "Grande"
                         break
                     else:
-                        print("Opción inválida. Por favor, seleccione 1, 2 o 3.")
+                        print("\n----Opción inválida. Por favor, seleccione 1, 2 o 3----\n")
                         
                 while True:
                     print("Seleccione el nuevo estado de la cabina")
@@ -192,7 +280,7 @@ def mostrar_menu_cabina():
                         estado = False
                         break
                     else:
-                        print("Opción inválida. Por favor, seleccione 1 o 2")
+                        print("\n----Opción inválida. Por favor, seleccione 1 o 2----\n")
                            
                 while True:
                         try:
@@ -200,15 +288,15 @@ def mostrar_menu_cabina():
                             if precio > 0:
                                 break
                             else:
-                                print("El precio debe ser un número positivo.")
+                                print("\n----El precio debe ser un número positivo----\n")
                         except ValueError:
-                            print("Entrada inválida. Por favor, ingrese un número.")
+                            print("\n----Entrada inválida. Por favor, ingrese un número----\n")
                 objCabina.modificar(capacidad, estado, tamanho, precio, idCabina)
                                         
             elif opcion == 3:
                 cabinas = Cabina.select_cabina()  # Obtener lista de cabinas como tuplas
                 if not cabinas:
-                    print("No hay cabinas registradas en el sistema para borrar.")
+                    print("\n----No hay cabinas registradas en el sistema para borrar----\n")
                     break
                 ids_validos = [cabina[0] for cabina in cabinas]  # Extraer IDs válidos de las tuplas
                 print("Listado de cabinas en el sistema:")
@@ -218,14 +306,14 @@ def mostrar_menu_cabina():
                 # Validar el ID de cabina ingresado
                 while True:
                     try:
-                        idCabina = int(input("Digite el ID de la cabina que desea modificar: ").strip())
+                        idCabina = int(input("Digite el ID de la cabina que desea borrar: ").strip())
                         if idCabina > 0 and idCabina in ids_validos:
                             objCabina.desactivar(idCabina)
                             break
                         else:
-                            print("El ID ingresado no es válido. Debe ser un número positivo y pertenecer a la lista mostrada.")
+                            print("\n----El ID ingresado no es válido. Debe ser un número positivo y pertenecer a la lista mostrada----\n")
                     except ValueError:
-                        print("Entrada inválida. Por favor, ingrese un número.")
+                        print("\n----Entrada inválida. Por favor, ingrese un número----\n")
                         
             elif opcion == 4:
                 objCabina.listar()
@@ -233,9 +321,9 @@ def mostrar_menu_cabina():
             elif opcion == 5:
                 break  
             else:
-                print("Opción no válida. Intente de nuevo.")
+                print("\n----Opción no válida. Intente de nuevo----\n")
         except ValueError as e: 
-            print(f"Error: {e}. Intente ingresar un número válido.")                       
+            print(f"\n----Error: {e}. Intente ingresar un número válido----\n")                       
 def mostrar_menu_rol():
     while True:
         print("""
@@ -335,4 +423,4 @@ def mostrar_menu_solicitud_servicio():
         except ValueError as e: 
             print(f"Error: {e}. Intente ingresar un número válido.")
             
-mostrar_menu_principal()                                     
+mostrar_menu_principal()                                      
