@@ -1,5 +1,5 @@
 from Conexion import conexionDB
-from Validaciones import validaString, validaFloatPositivo
+from Validaciones import validaString, validaFloatPositivo, validaIntPositivo
 
 class Rol():
     conexion = conexionDB()  # Se establece una única conexión para toda la clase
@@ -14,7 +14,7 @@ class Rol():
 
     #We capture data to insert it
     def capturaNuevoR(self):
-        self.idRol = validaString("Digite el ID del rol: ")
+        self.idRol = validaIntPositivo("Digite el ID del rol: ")
         self.nombre = validaString("Digite el nombre del rol: ")
         self.descripcion = validaString("Digite la descripción del rol: ")
         self.departamento = validaString("Digite el departamento del rol: ")
@@ -41,7 +41,7 @@ class Rol():
         nombre = validaString("Digite el nombre del rol: ")
         descripcion = validaString("Digite la descripción del rol: ")
         departamento = validaString("Digite el departamento del rol: ")
-        salario = validaFloatPositivo("El salario debe ser un número positivo.")
+        salario = validaFloatPositivo("Digite el salario: ")
 
         # We call the method to update data
         self.modificaRol(nombre, descripcion, departamento, salario, id)
@@ -64,21 +64,73 @@ class Rol():
         print("ID, NOMBRE, DESCRIPCIÓN, DEPARTAMENTO, SALARIO")
         Rol.miconexion.execute("select * from rol")
         datos = Rol.miconexion.fetchall()
-        for i in datos:
-            print(i)
+        if not datos:  # If the list is empty
+            print("No se encuentran roles en el sistema.")
+        else:
+            for i in datos:
+                print(i)
 
-    #Query to "delete" data from the database
+    """def BorraRol(self, id):
+        try:
+            # Verificar si hay trabajadores activos con el idRol que se desea borrar
+            consulta = "SELECT COUNT(*) FROM trabajador WHERE idRol = %s AND activo = 1"
+            datos = (id, 1)  # 1 representa True en MySQL
+            Rol.miconexion.execute(consulta, datos)
+            trabajadoresActivos = Rol.miconexion.fetchone()[0]  # Recuperar el conteo
+
+            if trabajadoresActivos > 0:
+                print("No se puede borrar el rol. Hay trabajadores activos asociados a este rol.")
+            else:
+                # Proceder a borrar el rol si no hay trabajadores activos
+                Rol.miconexion.execute("DELETE FROM rol WHERE idRol = %s", (id,))
+                Rol.conexion.commit()
+                print("Se ha borrado el rol exitosamente.")
+        except Exception as e:
+            print("Ocurrió un error al intentar borrar el rol:", e)
+    """
+
     def BorraRol(self, id):
-        Rol.miconexion.execute("DELETE FROM rol where idRol =  '%s'" % id)
-        Rol.conexion.commit()
-        print("Se ha borrado el rol exitosamente.")
+        cursor = None  # Inicializamos cursor fuera del bloque try
+        try:
+            # Crear un cursor explícito
+            cursor = Rol.miconexion.cursor()
+
+            # Validar que el rol existe
+            consulta_verificar_rol = "SELECT COUNT(*) FROM rol WHERE idRol = %s"
+            cursor.execute(consulta_verificar_rol, (id,))
+            existe_rol = cursor.fetchone()[0]
+
+            if existe_rol == 0:
+                print(f"No se puede borrar el rol con idRol {id} porque no existe en la base de datos.")
+                return
+
+            # Verificar si hay trabajadores activos con el idRol que se desea borrar
+            consulta = "SELECT COUNT(*) FROM trabajador WHERE idRol = %s AND activo = %s"
+            datos = (id, 1)  # 1 representa True en MySQL
+            cursor.execute(consulta, datos)
+            trabajadoresActivos = cursor.fetchone()[0]  # Recuperar el conteo
+
+            # Depuración: Mostrar conteo de trabajadores activos
+            print(f"Trabajadores activos encontrados con idRol {id}: {trabajadoresActivos}")
+
+            if trabajadoresActivos > 0:
+                print("No se puede borrar el rol. Hay trabajadores activos asociados a este rol.")
+            else:
+                # Proceder a borrar el rol si no hay trabajadores activos
+                cursor.execute("DELETE FROM rol WHERE idRol = %s", (id,))
+                Rol.conexion.commit()
+                print("Se ha borrado el rol exitosamente.")
+        except Exception as e:
+            print("Ocurrió un error al intentar borrar el rol:", e)
+        finally:
+            # Cerrar el cursor solo si se creó correctamente
+            if cursor:
+                cursor.close()
 
     # Prints and returns all the information in the database
-    def returnListaRol(self):
-        print("Listado de roles en el sistema:")
-        print("ID, NOMBRE")
-        Rol.miconexion.execute("SELECT idRol, nombre FROM rol;")
+    @staticmethod
+    def returnListaRol():
+        # Captures data
+        Rol.miconexion.execute("SELECT * FROM rol;")
         datos = Rol.miconexion.fetchall()
-        for i in datos:
-            print(i)
         return datos

@@ -90,38 +90,60 @@ def mostrar_menu_trabajador():
         ------------------------------
         """)
         try:
-            opcion = int(input("Selecione una opción: ")) 
+            opcion = int(input("Selecione una opción: "))
             if opcion == 1:
+                # We check if there are roles before proceeding with option 1 or 2
+                listRoles = Rol.returnListaRol()
+
+                if not listRoles:
+                    print("No hay roles en el sistema. Debe ingresar primero un rol.")
+                    continue
                 objTrabajador.capturaDatosNuevos()
                 objTrabajador.ingresaDatos()
             elif opcion == 2:
                 listTrabajadores = objTrabajador.trabajadoresActivos()
-                while True:
-                    try:
-                        idSeleccionado = int(input("Digite el ID del trabajador que desea modificar: ").strip())
+                # Validate if there are active workers
+                if not listTrabajadores:  # If the list is empty
+                    print("No se encuentran trabajadores activos en el sistema.")
+                else:
+                    print("Listado de trabajadores activos en el sistema: ")
+                    print("IDENTIFICACIÓN, NOMBRE, APELLIDO_1, APELLIDO_2, AÑO_NACIMIENTO, GÉNERO, ID_ROL")
+                    for i in listTrabajadores:
+                        print(i)
+                    while True:
+                        try:
+                            idSeleccionado = input("Digite el ID del trabajador que desea modificar: ").strip().upper()
 
-                        #Checks if the ID is in the list of available workers
-                        if any(trabajador[0] == idSeleccionado for trabajador in listTrabajadores):
-                            objTrabajador.capturaDatosMod(idSeleccionado)
-                            break
-                        else:
-                            print("ID no encontrado. Intente nuevamente.")
-                    except ValueError:
-                        print("Ingrese un número válido para el ID.")
+                            #Checks if the ID is in the list of available workers
+                            if any(trabajador[0] == idSeleccionado for trabajador in listTrabajadores):
+                                objTrabajador.capturaDatosMod(idSeleccionado)
+                                break
+                            else:
+                                print("ID no encontrado. Intente nuevamente.")
+                        except ValueError:
+                            print("Ingrese un número válido para el ID.")
             elif opcion == 3:
                 listTrabajadores = objTrabajador.trabajadoresActivos()
-                while True:
-                    try:
-                        idSeleccionado = int(input("Digite el ID del trabajador que desea desactivar: ").strip())
+                # Validate if there are active workers
+                if not listTrabajadores:  # If the list is empty
+                    print("No se encuentran trabajadores activos en el sistema.")
+                else:
+                    print("Listado de trabajadores activos en el sistema: ")
+                    print("IDENTIFICACIÓN, NOMBRE, APELLIDO_1, APELLIDO_2, AÑO_NACIMIENTO, GÉNERO, ID_ROL")
+                    for i in listTrabajadores:
+                        print(i)
+                    while True:
+                        try:
+                            idSeleccionado = input("Digite el ID del trabajador que desea desactivar: ").strip().upper()
 
-                        #Checks if the ID is in the list of available workers
-                        if any(trabajador[0] == idSeleccionado for trabajador in listTrabajadores):
-                            objTrabajador.desactiva(idSeleccionado)
-                            break
-                        else:
-                            print("ID no encontrado. Intente nuevamente.")
-                    except ValueError:
-                        print("Ingrese un número válido para el ID.")
+                            #Checks if the ID is in the list of available workers
+                            if any(trabajador[0] == idSeleccionado for trabajador in listTrabajadores):
+                                objTrabajador.desactiva(idSeleccionado)
+                                break
+                            else:
+                                print("ID no encontrado. Intente nuevamente.")
+                        except ValueError:
+                            print("Ingrese un número válido para el ID.")
             elif opcion == 4:
                 objTrabajador.listaDatos()
             elif opcion == 5:
@@ -187,6 +209,14 @@ def mostrar_menu_rol():
                 objRol.ingresaRol()
             elif opcion == 2:
                 listRoles = objRol.returnListaRol()
+                # Validate if there are active workers
+                if not listRoles:  # If the list is empty
+                    print("No se encuentran roles en el sistema.")
+                else:
+                    print("Listado de roles en el sistema: ")
+                    print("ID, NOMBRE, DESCRIPCIÓN, DEPARTAMENTO, SALARIO")
+                    for i in listRoles:
+                        print(i)
                 while True:
                     try:
                         idSeleccionado = int(input("Digite el ID del rol que desea modificar: ").strip())
@@ -198,9 +228,17 @@ def mostrar_menu_rol():
                         else:
                             print("ID no encontrado. Intente nuevamente.")
                     except ValueError:
-                        print("Ingrese un número entero válido para la posición.")
+                        print("Ingrese un número entero válido para el ID.")
             elif opcion == 3:
                 listRoles = objRol.returnListaRol()
+                # Validate if there are active workers
+                if not listRoles:  # If the list is empty
+                    print("No se encuentran roles en el sistema.")
+                else:
+                    print("Listado de roles en el sistema: ")
+                    print("ID, NOMBRE, DESCRIPCIÓN, DEPARTAMENTO, SALARIO")
+                    for i in listRoles:
+                        print(i)
                 while True:
                     try:
                         idSeleccionado = int(input("Digite el ID del rol que desea borrar: ").strip())
