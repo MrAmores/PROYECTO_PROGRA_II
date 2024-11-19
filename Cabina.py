@@ -1,4 +1,5 @@
 from Conexion import conexionDB
+from Validaciones import *
 class Cabina():
     conexion = conexionDB()
     miconexion = conexion.cursor()
@@ -13,30 +14,17 @@ class Cabina():
     def capturaDatos(self):
         # Validation of idCabina
         while True:
-            try:
-                self.idCabina = int(input("Digite el ID de la cabina: ").strip())
-                # Check if the idCabina already exists in the database
-                Cabina.miconexion.execute("SELECT COUNT(*) FROM cabina WHERE idCabina = %s", (self.idCabina,))
-                if Cabina.miconexion.fetchone()[0] > 0:
-                    print("\n----El ID de la cabina ya existe. Por favor, ingrese un ID único----\n")
-                elif self.idCabina < 0:
-                    print("\n----No se permiten números negativos----\n")
-                else:
-                    self.disponibilidad = True
-                    break
-            except ValueError:
-                print("\n----Entrada inválida. El ID de la cabina debe de ser un número entero----\n")
-                        
+            self.idCabina = validaIntPositivo("Digite el ID de la cabina: ")
+            # Check if the idCabina already exists in the database
+            Cabina.miconexion.execute("SELECT COUNT(*) FROM cabina WHERE idCabina = %s", (self.idCabina,))
+            if Cabina.miconexion.fetchone()[0] > 0:
+                print("\n----El ID de la cabina ya existe. Por favor, ingrese un ID único----\n")
+            else:
+                self.disponibilidad = True
+                break
+                            
         # Validation of capacity
-        while True:
-            try:
-                self.capacidad = int(input("Digite la capacidad de personas que permite la cabina: ").strip())
-                if self.capacidad <= 0:
-                    print("\n----La cabina por lo menos debe tener capacidad para un pasajero----\n")
-                else:
-                    break
-            except ValueError:
-                print("\n----Entrada inválida. Por favor, ingrese un número----\n")
+        self.capacidad = validaIntPositivo("Digite la capacidad de personas que permite la cabina: ")
         
         # Validation of size
         while True:
@@ -60,19 +48,8 @@ class Cabina():
                 print("\n----Opción inválida. Por favor, seleccione 1, 2 o 3----\n")         
 
         # Validation of price
-        while True:
-            try:
-                entrada_precio = input("Digite el precio de la cabina: ").strip()
-                precio = float(entrada_precio)
-                if precio > 0:
-                    self.precio = precio
-                    break
-                else:
-                    print("\n----El precio debe ser un número positivo----\n")
-            except ValueError:
-                print("\n----Entrada inválida. Por favor, ingrese un número----\n")
-
-
+        self.precio = validaFloatPositivo("Digite el precio de la cabina: ")
+           
     def ingresaCabina(self):
         # Consulta SQL de inserción
         ingreso = "INSERT INTO cabina (idCabina, capacidad, disponibilidad, tamanho, precio) VALUES (%s, %s, %s, %s, %s)"

@@ -4,8 +4,9 @@ from Cabina import Cabina
 
 from Validaciones import (
     validaString,
-    validaIntPositivo,
-    validaGenero
+    validaAnhoNacimiento,
+    validaGenero,
+    validaIntPositivo
 )
 
 class Pasajero(Persona):
@@ -16,114 +17,53 @@ class Pasajero(Persona):
         super().__init__(identificacion, nombre, apellido1, apellido2, anhoNacimiento, genero, activo)
         self.idCabina = idCabina
 
-
-    def capturaDatosNuevos(self):
-        self.identificacion = validaString("Digite el número de identificación del pasajero: ")
-        self.nombre = validaString("Digite el nombre del pasajero: ")
-        self.apellido1 = validaString("Digite el primer apellido del pasajero: ")
-        self.apellido2 = validaString("Digite el segundo apellido del pasajero: ")
-        self.anhoNacimiento = validaIntPositivo("Digite el año de nacimiento del pasajero: ")
-        self.genero = validaGenero()
-
-        
-    def capturaDatos(self): # ABSTRACT METHOD 
-         # Validation of identification
+    def capturaDatosNuevos(self): # ABSTRACT METHOD 
         while True:
-            self.identificacion = input("Digite la identificación del pasajero: ").strip()
-            # Check if the identificacion already exists in the database
+            self.identificacion = validaString("Digite el número de identificación del pasajero: ")
             Pasajero.miconexion.execute("SELECT COUNT(*) FROM pasajero WHERE idPasajero = %s", (self.identificacion,))
             if Pasajero.miconexion.fetchone()[0] > 0:
                 print("\n----El ID del pasajero ya existe. Por favor, ingrese un ID único----\n")
             elif self.identificacion:
                 self.activo = True
                 break
-            else:
-                print("\n----El número de identificación no puede estar vacío----\n")
-                
-        # Validation of name
         while True:
-            self.nombre = input("Digite el nombre del pasajero: ").strip()
-            if self.nombre:
+            acompañantes = input("""
+            Usted viene con acompañantes?
+            1 - Si
+            2 - No
+            """
+            )
+            if acompañantes == "1":
+                cantidad_pasajeros = validaIntPositivo("Digite la cantidad de acompañantes que vienen con usted: ")
+                break
+            elif acompañantes == "2":
+                cantidad_pasajeros = 0
                 break
             else:
-                print("\n----El nombre no puede estar vacío o contener solo espacios----\n")
-                
-        # Validation of the first last name
-        while True:
-            self.apellido1 = input("Digite el primer apellido del pasajero: ").strip()
-            if self.apellido1:
-                break
-            else:
-                print("\n----El primer apellido no puede estar vacío o contener solo espacios----\n")
-                
-        # Validation of the second last name
-        while True:
-            self.apellido2 = input("Digite el segundo apellido del pasajero: ").strip()
-            if self.apellido2:
-                break
-            else:
-                print("\n----El segundo apellido no puede estar vacío o contener solo espacios----\n")
-                
-        # Validation of date of birtg year
-        while True:
-            try:
-                anhoNacimiento = int(input("Digite el año de nacimiento del pasajero: ").strip())
-                if anhoNacimiento > 0:
-                    self.fechaNacimiento = anhoNacimiento
-                    break
-                else:
-                    print("\n----El año de nacimiento debe de ser una numero positivo----\n")
-            except ValueError:
-                print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
-                     
-        # Gender validation
-        while True:
-            gen = input(-"""
-            Seleccione el género:
-            F - Femenino
-            M - Masculino 
-            """).strip().upper()
-
-            if gen == "F":
-                self.genero = "Femenino"
-                break
-            elif gen == "M":
-                self.genero = "Masculino"
-                break
-            else:
-                print("\n----Opción no válida. Ingrese 'F' para Femenino o 'M' para Masculino----\n")
-                
-        while True:
-            try:
-                cantidad_pasajeros = int(input("Digite la cantidad de acompañantes que vienen con usted: "))
-                if cantidad_pasajeros >= 0:  
-                    ids_disponibles = Cabina.obtener_cabinas_disponibles(cantidad_pasajeros)  # Obtener y almacenar IDs disponibles
-                    #print(f"IDs disponibles: {ids_disponibles}")
-                    if not ids_disponibles:
-                        print("\n----No hay cabinas disponibles para la cantidad de acompañantes especificada----\n")
-                        self.idCabina=None
+                print("\n ---- Opción invalida selecione 1 o 2 ----\n")        
+        ids_disponibles = Cabina.obtener_cabinas_disponibles(cantidad_pasajeros)
+        if not ids_disponibles:
+            print("\n----No se puedo ingresar al pasajero ya que no hay cabinas disponibles para esa cantidad de personas----\n")
+        else:
+             while True:
+                try:
+                    cabina = int(input("Seleccione el ID de la cabina: ").strip())
+                    if cabina in ids_disponibles:  # Verificar si el ID existe en la lista de IDs disponibles
+                        self.idCabina = cabina
+                        self.nombre = validaString("Digite el nombre del pasajero: ")
+                        self.apellido1 = validaString("Digite el primer apellido del pasajero: ")
+                        self.apellido2 = validaString("Digite el segundo apellido del pasajero: ")
+                        self.anhoNacimiento = validaAnhoNacimiento("Digite el año de nacimiento del pasajero: ")
+                        self.genero = validaGenero()
+                        Cabina.pasar_cabina_a_ocupada(self.idCabina)
+                        Pasajero.ingresaDatos()
                         break
-                    while True:
-                        try:
-                            cabina = int(input("Seleccione el ID de la cabina: ").strip())
-                            if cabina in ids_disponibles:  # Verificar si el ID existe en la lista de IDs disponibles
-                                self.idCabina = cabina
-                                Cabina.pasar_cabina_a_ocupada(self.idCabina)
-                                #print(f"Cabina seleccionada: {self.idCabina}")
-                                break
-                            else:
-                                print("\n----El ID ingresado no está disponible. Por favor, seleccione un ID válido de la lista----\n")
-                        except ValueError:
-                            print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
-                    break        
-                else:
-                    print("\n----No se permite ingresar números negativos----\n")
-            except ValueError:
-                print("Entrada inválida. Por favor, ingrese un número entero.")
-        self.activo = True
-        #self.ingresaPasajero()
-    
-    def ingresaDatos(self):
+                    else:
+                        print("\n----El ID de la cabina ingresado no está disponible. Por favor, seleccione un ID válido de la lista----\n")
+                except ValueError:
+                    print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
+                            
+    def ingresaDatos(self): # ABSTRACT METHOD 
         # Consulta SQL de inserción
         ingreso = "INSERT INTO pasajero (idPasajero, nombre, apell_1, apell_2, anho_nacimiento, genero, activo, idCabina) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.anhoNacimiento,self.genero,self.activo,self.idCabina)
@@ -131,22 +71,23 @@ class Pasajero(Persona):
         Pasajero.miconexion.execute(ingreso, datos)
         Pasajero.conexion.commit()
         print("Se ha ingresado al pasajero exitosamente.")
-
-    def capturaDatosMod(self):
-        pass
-
-    def modificaDatos(self, nombre, apell_1, apell_2, anho_nacimiento, genero, id):
-
-                print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
-        if self.idCabina:  # Solo si se ha seleccionado una cabina
-            self.ingresaPasajero()
-        else:
-            print("\n===================================================================")
-            print("No se puede ingresar al pasajero ya que no hay cabinas disponibles.")
-            print("===================================================================\n")
-                                  
-    def modificar(self, nombre, apell_1, apell_2, anho_nacimiento, genero, id):# ABSTRACT METHOD 
-
+        
+    def capturaDatosMod(self, id): # ABSTRACT METHOD 
+        # We get the current data of the worker with the given ID
+        Pasajero.miconexion.execute("SELECT * FROM pasajero WHERE idPasajero = '%s'" % id)
+        datos = Pasajero.miconexion.fetchone()
+        # Prints the current data
+        print(f"Datos actuales del pasajero: {datos}")
+        # New data validation
+        nombre = validaString("Digite el nombre del pasajero: ")
+        apell_1 = validaString("Digite el primer apellido del pasajero: ")
+        apell_2 = validaString("Digite el segundo apellido del pasajero: ")
+        anho_nacimiento = validaAnhoNacimiento("Digite el año de nacimiento del pasajero: ")
+        genero = validaGenero()
+        #We call the method to update data
+        self.modificaDatos(nombre, apell_1, apell_2, anho_nacimiento, genero, id)         
+                                 
+    def modificaDatos(self, nombre, apell_1, apell_2, anho_nacimiento, genero, id):# ABSTRACT METHOD 
          # Consulta SQL de modificación
         modificar = ("update pasajero set nombre = %s, "
                      "apell_1 = %s, "
@@ -159,19 +100,8 @@ class Pasajero(Persona):
         Pasajero.miconexion.execute(modificar, datos)
         Pasajero.conexion.commit()
         print("Se han modificado los datos del pasajero exitosamente.")
-
     
-    def listaDatos(self):
-        print("Listado de pasajeros en el sistema:")
-        # Ejecutar la consulta y listar datos
-        Pasajero.miconexion.execute("select * from pasajero")
-        datos = Pasajero.miconexion.fetchall()
-        for i in datos:
-            print(i)
-    
-    def desactiva(self, id):
-        modificar = "UPDATE pasajero SET activo = %s WHERE idRol = %s"        
-    def listar(self):# ABSTRACT METHOD 
+    def listaDatos(self):# ABSTRACT METHOD 
         print("Listado de pasajeros en el sistema")
         # Execute query and list data
         Pasajero.miconexion.execute("SELECT * FROM pasajero WHERE activo != 0")
@@ -179,7 +109,7 @@ class Pasajero(Persona):
         for i in datos:
             print(f"Identificación: {i[0]}, Nombre: {i[1]}, Apellido 1: {i[2]}, Apellido 2: {i[3]}, Año de Nacimiento: {i[4]}, Género: {i[5]}, Activo: {i[6]}, ID Cabina: {i[7]}")
             
-    def desactivar(self, id):# ABSTRACT METHOD 
+    def desactiva(self, id):# ABSTRACT METHOD 
         modificar = "UPDATE pasajero SET activo = %s WHERE idPasajero = %s"
         datos = (False, id)
         # Ejecutar la consulta y inactivar datos
@@ -187,19 +117,9 @@ class Pasajero(Persona):
         Pasajero.conexion.commit()
         print("\n=======================================")
         print("Se ha borrado el pasajero exitosamente.")
-        print("=====================================\n")
+        print("\n=====================================\n")
                
-    def ingresaPasajero(self):
-        # Consulta SQL de inserción
-        ingreso = "INSERT INTO pasajero (idPasajero, nombre, apell_1, apell_2, anho_nacimiento, genero, activo, idCabina) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-        datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.fechaNacimiento,self.genero,self.activo,self.idCabina)
-        # Ejecutar la consulta e ingresar datos
-        Pasajero.miconexion.execute(ingreso, datos)
-        Pasajero.conexion.commit()
-        print("\n=========================================")
-        print("Se ha ingresado al pasajero exitosamente.")
-        print("=========================================\n")
-             
+        
     @staticmethod
     def select_pasajero():
         # Query para obtener las cabinas

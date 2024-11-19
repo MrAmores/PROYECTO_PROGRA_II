@@ -3,7 +3,6 @@ from Persona import Persona
 from Rol import Rol
 from Validaciones import (
     validaString,
-    validaIntPositivo,
     validaGenero,
     validaAnhoNacimiento
 )
