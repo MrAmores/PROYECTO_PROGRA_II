@@ -1,5 +1,5 @@
-
 from Pasajero import Pasajero
+from Servicio import Servicio
 
 def mostrar_menu_principal():
     opc = 0
@@ -32,7 +32,7 @@ def mostrar_menu_principal():
                 mostrar_menu_rol()
                 pass
             elif opc == 5:
-                mostrar_menu_servicio
+                mostrar_menu_servicio()
                 pass
             elif opc == 6:
                 mostrar_menu_solicitud_servicio
@@ -47,6 +47,7 @@ def mostrar_menu_principal():
 
 def mostrar_menu_pasajero():
     objPasajero = Pasajero(identificacion=None, nombre=None, apellido1=None, apellido2=None, fechaNacimiento=None, genero=None, activo=None, idCabina=None)
+
     while True:
         print("""
         ------------------------------
@@ -184,6 +185,7 @@ def mostrar_menu_rol():
         except ValueError as e: 
             print(f"Error: {e}. Intente ingresar un número válido.")         
 def mostrar_menu_servicio():
+    objServicio = Servicio(idServicio = None, tipo = None, descripcion = None, precio = None)
     while True:
         print("""
         ------------------------------
@@ -200,23 +202,28 @@ def mostrar_menu_servicio():
             opcion = int(input("Selecione una opción: ")) 
             
             if opcion == 1:
+                objServicio.capturaDatos()
+                objServicio.ingresaServicio()
                 pass
-                # registrar()
+                
             elif opcion == 2:
+                objServicio.listar()
+                objServicio.modificaServicio(tipo= input("Digite el tipo: "), descripcion= input("Digite la descripción: "), precio= float(input("Digite el precio: ")), id= int(input("Digite el id: ")))
                 pass
-                # modificar()
             elif opcion == 3:
                 pass
-                # desactivar()
+                objServicio.listar()
+                objServicio.borraServicio(id= int(input("Digite el número del servicio que desea eliminar: ")))
             elif opcion == 4:
-                # listar()
+                objServicio.listar()
                 pass
             elif opcion == 5:
                 break  
             else:
                 print("Opción no válida. Intente de nuevo.")
         except ValueError as e: 
-            print(f"Error: {e}. Intente ingresar un número válido.")           
+            print(f"Error: {e}. Intente ingresar un número válido.")     
+
 def mostrar_menu_solicitud_servicio():
     while True:
         print("""
