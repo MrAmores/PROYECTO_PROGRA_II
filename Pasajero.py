@@ -2,13 +2,29 @@ from Persona import Persona
 from Conexion import conexionDB
 from Cabina import Cabina
 
+from Validaciones import (
+    validaString,
+    validaIntPositivo,
+    validaGenero
+)
+
 class Pasajero(Persona):
     conexion = conexionDB()
     miconexion = conexion.cursor()
     
-    def __init__(self, identificacion, nombre, apellido1, apellido2, fechaNacimiento, genero, activo, idCabina):
-        super().__init__(identificacion, nombre, apellido1, apellido2, fechaNacimiento, genero, activo)
+    def __init__(self, identificacion, nombre, apellido1, apellido2, anhoNacimiento, genero, activo, idCabina):
+        super().__init__(identificacion, nombre, apellido1, apellido2, anhoNacimiento, genero, activo)
         self.idCabina = idCabina
+
+
+    def capturaDatosNuevos(self):
+        self.identificacion = validaString("Digite el número de identificación del pasajero: ")
+        self.nombre = validaString("Digite el nombre del pasajero: ")
+        self.apellido1 = validaString("Digite el primer apellido del pasajero: ")
+        self.apellido2 = validaString("Digite el segundo apellido del pasajero: ")
+        self.anhoNacimiento = validaIntPositivo("Digite el año de nacimiento del pasajero: ")
+        self.genero = validaGenero()
+
         
     def capturaDatos(self): # ABSTRACT METHOD 
          # Validation of identification
@@ -103,6 +119,24 @@ class Pasajero(Persona):
                 else:
                     print("\n----No se permite ingresar números negativos----\n")
             except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero.")
+        self.activo = True
+        #self.ingresaPasajero()
+    
+    def ingresaDatos(self):
+        # Consulta SQL de inserción
+        ingreso = "INSERT INTO pasajero (idPasajero, nombre, apell_1, apell_2, anho_nacimiento, genero, activo, idCabina) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.anhoNacimiento,self.genero,self.activo,self.idCabina)
+        # Ejecutar la consulta e ingresar datos
+        Pasajero.miconexion.execute(ingreso, datos)
+        Pasajero.conexion.commit()
+        print("Se ha ingresado al pasajero exitosamente.")
+
+    def capturaDatosMod(self):
+        pass
+
+    def modificaDatos(self, nombre, apell_1, apell_2, anho_nacimiento, genero, id):
+
                 print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
         if self.idCabina:  # Solo si se ha seleccionado una cabina
             self.ingresaPasajero()
@@ -112,6 +146,7 @@ class Pasajero(Persona):
             print("===================================================================\n")
                                   
     def modificar(self, nombre, apell_1, apell_2, anho_nacimiento, genero, id):# ABSTRACT METHOD 
+
          # Consulta SQL de modificación
         modificar = ("update pasajero set nombre = %s, "
                      "apell_1 = %s, "
@@ -124,7 +159,18 @@ class Pasajero(Persona):
         Pasajero.miconexion.execute(modificar, datos)
         Pasajero.conexion.commit()
         print("Se han modificado los datos del pasajero exitosamente.")
-         
+
+    
+    def listaDatos(self):
+        print("Listado de pasajeros en el sistema:")
+        # Ejecutar la consulta y listar datos
+        Pasajero.miconexion.execute("select * from pasajero")
+        datos = Pasajero.miconexion.fetchall()
+        for i in datos:
+            print(i)
+    
+    def desactiva(self, id):
+        modificar = "UPDATE pasajero SET activo = %s WHERE idRol = %s"        
     def listar(self):# ABSTRACT METHOD 
         print("Listado de pasajeros en el sistema")
         # Execute query and list data

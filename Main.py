@@ -1,4 +1,6 @@
 from Pasajero import Pasajero
+from Trabajador import Trabajador
+from Rol import Rol
 from Cabina import Cabina
 from Servicio import Servicio
 def mostrar_menu_principal():
@@ -21,22 +23,16 @@ def mostrar_menu_principal():
             opc = int(input("Seleccione una opción: "))
             if opc == 1:
                 mostrar_menu_pasajero()
-                pass
             elif opc == 2:
                 mostrar_menu_trabajador()
-                pass
             elif opc == 3:
                 mostrar_menu_cabina()
-                pass
             elif opc == 4:
                 mostrar_menu_rol()
-                pass
             elif opc == 5:
                 mostrar_menu_servicio()
-                pass
             elif opc == 6:
-                mostrar_menu_solicitud_servicio
-                pass
+                mostrar_menu_solicitud_servicio()
             elif opc == 7:
                 print("SALIENDO DEL SISTEMA")
                 break
@@ -45,8 +41,8 @@ def mostrar_menu_principal():
         except ValueError as e:
             print(f"Error: {e}. Intente ingresar un número válido.")
 def mostrar_menu_pasajero():
+    objPasajero = Pasajero(identificacion=None, nombre=None, apellido1=None, apellido2=None, anhoNacimiento=None, genero=None, activo=None, idCabina=None)
     objPasajero = Pasajero(identificacion=None, nombre=None, apellido1=None, apellido2=None, fechaNacimiento=None, genero=None, activo=None, idCabina=None)
-
     while True:
         print("""
         ------------------------------
@@ -61,8 +57,6 @@ def mostrar_menu_pasajero():
         """)
         try:
             opcion = int(input("Seleccione una opción: "))
-            if opcion == 1:
-                objPasajero.capturaDatos()
             elif opcion == 2:
                 # Option to modify a passenger
                 pasajeros = Pasajero.select_pasajero()  # Get the list of passengers as tuples
@@ -157,6 +151,7 @@ def mostrar_menu_pasajero():
                         else:
                             print("\n----La identificación ingresada no es válida. Debe pertenecer a la lista mostrada----\n")
             elif opcion == 4:
+                objPasajero.listaDatos()
                 objPasajero.listar()
             elif opcion == 5:
                 print("\n----Saliendo del sistema----\n")
@@ -166,6 +161,7 @@ def mostrar_menu_pasajero():
         except ValueError as e:
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")
 def mostrar_menu_trabajador():
+    objTrabajador = Trabajador(identificacion=None, nombre=None, apellido1=None, apellido2=None, anhoNacimiento=None, genero=None, activo=None, idRol=None)
     while True:
         print("""
         ------------------------------
@@ -179,19 +175,62 @@ def mostrar_menu_trabajador():
         ------------------------------
         """)
         try:
-            opcion = int(input("Selecione una opción: ")) 
+            opcion = int(input("Selecione una opción: "))
             if opcion == 1:
-                pass
-                # registrar()
+                # We check if there are roles before proceeding with option 1 or 2
+                listRoles = Rol.returnListaRol()
+
+                if not listRoles:
+                    print("No hay roles en el sistema. Debe ingresar primero un rol.")
+                    continue
+                objTrabajador.capturaDatosNuevos()
+                objTrabajador.ingresaDatos()
             elif opcion == 2:
-                pass
-                # modificar()
+                listTrabajadores = objTrabajador.trabajadoresActivos()
+                # Validate if there are active workers
+                if not listTrabajadores:  # If the list is empty
+                    print("No se encuentran trabajadores activos en el sistema.")
+                else:
+                    print("Listado de trabajadores activos en el sistema: ")
+                    print("IDENTIFICACIÓN, NOMBRE, APELLIDO_1, APELLIDO_2, AÑO_NACIMIENTO, GÉNERO, ID_ROL")
+                    for i in listTrabajadores:
+                        print(i)
+                    while True:
+                        try:
+                            idSeleccionado = input("Digite el ID del trabajador que desea modificar: ").strip().upper()
+
+                            #Checks if the ID is in the list of available workers
+                            if any(trabajador[0] == idSeleccionado for trabajador in listTrabajadores):
+                                objTrabajador.capturaDatosMod(idSeleccionado)
+                                break
+                            else:
+                                print("ID no encontrado. Intente nuevamente.")
+                        except ValueError:
+                            print("Ingrese un número válido para el ID.")
             elif opcion == 3:
-                pass
-                # desactivar()
+                listTrabajadores = objTrabajador.trabajadoresActivos()
+                # Validate if there are active workers
+                if not listTrabajadores:  # If the list is empty
+                    print("No se encuentran trabajadores activos en el sistema.")
+                else:
+                    print("Listado de trabajadores activos en el sistema: ")
+                    print("IDENTIFICACIÓN, NOMBRE, APELLIDO_1, APELLIDO_2, AÑO_NACIMIENTO, GÉNERO, ID_ROL")
+                    for i in listTrabajadores:
+                        print(i)
+                    while True:
+                        try:
+                            idSeleccionado = input("Digite el ID del trabajador que desea desactivar: ").strip().upper()
+
+                            #Checks if the ID is in the list of available workers
+                            if any(trabajador[0] == idSeleccionado for trabajador in listTrabajadores):
+                                objTrabajador.desactiva(idSeleccionado)
+                                break
+                            else:
+                                print("ID no encontrado. Intente nuevamente.")
+                        except ValueError:
+                            print("Ingrese un número válido para el ID.")
             elif opcion == 4:
-                # listar()
-                pass
+                objTrabajador.listaDatos()
             elif opcion == 5:
                 break
             else:
@@ -324,8 +363,11 @@ def mostrar_menu_cabina():
             else:
                 print("\n----Opción no válida. Intente de nuevo----\n")
         except ValueError as e: 
+            print(f"Error: {e}. Intente ingresar un número válido.")
+
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")                       
 def mostrar_menu_rol():
+    objRol = Rol(idRol=None, nombre=None, descripcion=None, departamento=None, salario=None)
     while True:
         print("""
         ------------------------------
@@ -339,26 +381,63 @@ def mostrar_menu_rol():
         ------------------------------
         """)
         try:
-            opcion = int(input("Selecione una opción: ")) 
-            
+            opcion = int(input("Selecione una opción: "))
             if opcion == 1:
-                pass
-                # registrar()
+                objRol.capturaNuevoR()
+                objRol.ingresaRol()
             elif opcion == 2:
-                pass
-                # modificar()
+                listRoles = objRol.returnListaRol()
+                # Validate if there are active workers
+                if not listRoles:  # If the list is empty
+                    print("No se encuentran roles en el sistema.")
+                else:
+                    print("Listado de roles en el sistema: ")
+                    print("ID, NOMBRE, DESCRIPCIÓN, DEPARTAMENTO, SALARIO")
+                    for i in listRoles:
+                        print(i)
+                while True:
+                    try:
+                        idSeleccionado = int(input("Digite el ID del rol que desea modificar: ").strip())
+
+                        # Checks if the ID is in the list of available roles
+                        if any(rol[0] == idSeleccionado for rol in listRoles):
+                            objRol.capturaModR(idSeleccionado)
+                            break
+                        else:
+                            print("ID no encontrado. Intente nuevamente.")
+                    except ValueError:
+                        print("Ingrese un número entero válido para el ID.")
             elif opcion == 3:
-                pass
-                # desactivar()
+                listRoles = objRol.returnListaRol()
+                # Validate if there are active workers
+                if not listRoles:  # If the list is empty
+                    print("No se encuentran roles en el sistema.")
+                else:
+                    print("Listado de roles en el sistema: ")
+                    print("ID, NOMBRE, DESCRIPCIÓN, DEPARTAMENTO, SALARIO")
+                    for i in listRoles:
+                        print(i)
+                while True:
+                    try:
+                        idSeleccionado = int(input("Digite el ID del rol que desea borrar: ").strip())
+
+                        # Checks if the ID is in the list of available roles
+                        if any(rol[0] == idSeleccionado for rol in listRoles):
+                            objRol.BorraRol(idSeleccionado)
+                            break
+                        else:
+                            print("ID no encontrado. Intente nuevamente.")
+                    except ValueError:
+                        print("Ingrese un número válido para el ID.")
             elif opcion == 4:
-                # listar()
-                pass
+                objRol.listaRol()
             elif opcion == 5:
                 break  
             else:
                 print("Opción no válida. Intente de nuevo.")
         except ValueError as e: 
-            print(f"Error: {e}. Intente ingresar un número válido.")         
+            print(f"Error: {e}. Intente ingresar un número válido.")
+
 def mostrar_menu_servicio():
     objServicio = Servicio(idServicio = None, tipo = None, descripcion = None, precio = None)
     while True:
@@ -396,8 +475,7 @@ def mostrar_menu_servicio():
                 break  
             else:
                 print("Opción no válida. Intente de nuevo.")
-        except ValueError as e: 
-            print(f"Error: {e}. Intente ingresar un número válido.")     
+        except ValueError as e:  
 
 def mostrar_menu_solicitud_servicio():
     while True:
@@ -429,5 +507,9 @@ def mostrar_menu_solicitud_servicio():
                 print("Opción no válida. Intente de nuevo.")
         except ValueError as e: 
             print(f"Error: {e}. Intente ingresar un número válido.")
-            
+
+
+if __name__=="__main__":
+    mostrar_menu_principal()    
 mostrar_menu_principal()                                      
+
