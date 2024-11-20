@@ -7,5 +7,4 @@ def conexionDB():
         port= '3306',
         database= 'crucero'
     )
-    co
     return conexion

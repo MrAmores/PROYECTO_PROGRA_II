@@ -46,9 +46,9 @@ class Trabajador(Persona):
                     self.idRol = idSeleccionado
                     break
                 else:
-                    print("ID no encontrado. Intente nuevamente.")
+                    print("\n----El ID del rol no se encontró en el sistema. Por favor, intente nuevamente----\n")
             except ValueError:
-                print("Ingrese un número entero válido para el ID del rol")
+                print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
         self.activo = True
 
     #Query to insert new data into the database
@@ -57,7 +57,9 @@ class Trabajador(Persona):
         datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.anhoNacimiento,self.genero,self.activo,self.idRol)
         Trabajador.miconexion.execute(ingreso, datos)
         Trabajador.conexion.commit()
+        print("\n==========================================\n")
         print("Se ha ingresado al trabajador exitosamente.")
+        print("\n==========================================\n")
 
     #We capture data to do modifications
     def capturaDatosMod(self, id):
@@ -91,9 +93,9 @@ class Trabajador(Persona):
                     idRol = idSeleccionado
                     break
                 else:
-                    print("ID no encontrado. Intente nuevamente.")
+                    print("\n----El ID del rol no se encontró en el sistema. Por favor, intente nuevamente----\n")
             except ValueError:
-                print("Ingrese un número entero válido para el ID del rol.")
+                print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
 
         #We call the method to update data
         self.modificaDatos(nombre, apell_1, apell_2, anho_nacimiento, genero, idRol, id)
@@ -110,7 +112,9 @@ class Trabajador(Persona):
         datos = (nombre, apell_1, apell_2, anho_nacimiento, genero, idRol, id)
         Trabajador.miconexion.execute(modificar, datos)
         Trabajador.conexion.commit()
+        print("\n====================================================\n")
         print("Se han modificado los datos del trabajador exitosamente.")
+        print("\n====================================================\n")
 
     #Prints all information in the database
     def listaDatos(self):
@@ -119,7 +123,7 @@ class Trabajador(Persona):
         Trabajador.miconexion.execute("select * from trabajador")
         datos = Trabajador.miconexion.fetchall()
         if not datos:  # If the list is empty
-            print("No se encuentran trabajadores activos en el sistema.")
+            print("\n----No se encuentran trabajadores activos en el sistema.----\n")
         else:
             for i in datos:
                 print(i)
@@ -130,7 +134,9 @@ class Trabajador(Persona):
         datos = (False, id)
         Trabajador.miconexion.execute(modificar, datos)
         Trabajador.conexion.commit()
+        print("\n========================================\n")
         print("Se ha borrado el trabajador exitosamente.")
+        print("\n========================================\n")
 
     #Prints currently active workers
     def trabajadoresActivos(self):

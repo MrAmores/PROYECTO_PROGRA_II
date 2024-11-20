@@ -76,8 +76,6 @@ class Rol():
             for i in datos:
                 print(i)
 
-
-
     # Prints and returns all the information in the database
     @staticmethod
     def returnListaRol():
@@ -87,36 +85,35 @@ class Rol():
         return datos
 
     def obtenerTrabajadoresActivos(self, idRol):
-        # Ejecuta la consulta para contar las personas activas con el idRol recibido como parámetro
-        Rol.miconexion.execute("SELECT COUNT(*) AS total_personas FROM trabajador WHERE idRol = %s AND activo = 1",
-                               (idRol,))
+        try:
+            # Ejecuta la consulta para contar las personas activas con el idRol recibido como parámetro
+            consulta = ("SELECT COUNT(*) FROM trabajador WHERE idRol = %s AND activo = %s")
+            Rol.miconexion.execute(consulta, (idRol, True))  # Cambiado para pasar como tupla
+            datos = Rol.miconexion.fetchone()
+            print(f"cantidad activos ahora es {datos[0]}")  # Cambiado para acceder al primer elemento
 
-        # Obtiene los datos resultantes de la consulta (una tupla)
-        datos = Rol.miconexion.fetchone()
-
-        if datos:
-            return datos[0]  # Devuelve el primer valor de la tupla, que es el conteo de trabajadores activos
-        return 0  # En caso de que no haya datos, devuelve 0
+            if datos[0] > 0:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(f"Error en obtenerTrabajadoresActivos: {e}")
+            return False
 
     def BorraRol(self, id):
         try:
             # Verificar si hay trabajadores activos con el idRol que se desea borrar
             trabajadoresActivos = self.obtenerTrabajadoresActivos(id)
 
-            if trabajadoresActivos == -1:
-                print("No se pudo verificar los trabajadores activos. Operación cancelada.")
-                return
-
-            print(f"Trabajadores activos encontrados: {trabajadoresActivos}")  # Agregar depuración
-
-            if trabajadoresActivos > 0:
+            if trabajadoresActivos:
                 print("No se puede borrar el rol. Hay trabajadores activos asociados a este rol.")
             else:
                 # Proceder a borrar el rol si no hay trabajadores activos
-                consulta_borrar = "DELETE FROM rol WHERE idRol = %s"
-                Rol.miconexion.execute(consulta_borrar, (id,))  # Pasamos id como una tupla
-                Rol.conexion.commit()
+                consulta = "DELETE FROM rol WHERE idRol = %s"
+                Rol.miconexion.execute(consulta, (id,))  # Esto está correcto
+                Rol.miconexion.commit()
                 print("Se ha borrado el rol exitosamente.")
         except Exception as e:
             print("Ocurrió un error al intentar borrar el rol:", e)
+
 
