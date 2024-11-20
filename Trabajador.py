@@ -17,7 +17,13 @@ class Trabajador(Persona):
 
     #We capture data to insert it
     def capturaDatosNuevos(self):
-        self.identificacion = validaString("Digite el número de identificación del trabajador: ").upper()
+        while True:
+            self.identificacion = validaString("Digite el número de identificación del trabajador: ").upper()
+            Trabajador.miconexion.execute("SELECT COUNT(*) FROM trabajador WHERE idTrabajador = %s", (self.identificacion,))
+            if Trabajador.miconexion.fetchone()[0] > 0:
+                print("\n----El ID del trabajador ya existe. Por favor, ingrese un ID único----\n")
+            else:
+                break
         self.nombre = validaString("Digite el nombre del trabajador: ")
         self.apellido1 = validaString("Digite el primer apellido del trabajador: ")
         self.apellido2 = validaString("Digite el segundo apellido del trabajador: ")
