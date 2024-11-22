@@ -129,8 +129,8 @@ class Trabajador(Persona):
 
     #Query to "delete" data from the database
     def desactiva(self, id):
-        modificar = "UPDATE trabajador SET activo = %s WHERE idTrabajador = %s"
-        datos = (False, id)
+        modificar = "UPDATE trabajador SET activo = %s, idRol = %s WHERE idTrabajador = %s"
+        datos = (False,None,id)
         Trabajador.miconexion.execute(modificar, datos)
         Trabajador.conexion.commit()
         print("\n========================================\n")
