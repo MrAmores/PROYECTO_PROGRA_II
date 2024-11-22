@@ -115,5 +115,19 @@ class Rol():
                 print("Se ha borrado el rol exitosamente.")
         except Exception as e:
             print("Ocurrió un error al intentar borrar el rol:", e)
+            
+    @staticmethod        
+    def BorraRol_prueba(id):
+        consulta = "DELETE FROM rol WHERE idRol = %s"
+        Rol.miconexion.execute(consulta, (id,))
+        Rol.miconexion.commit()
+        print("Se ha borrado el rol exitosamente.")
+           
+    @staticmethod            
+    def select_trabajadores():
+        # Captura los datos de trabajadores activos
+        Rol.miconexion.execute("SELECT idTrabajador, nombre, idRol FROM trabajador WHERE activo = True")
+        datos = Rol.miconexion.fetchall()
+        return datos
 
 

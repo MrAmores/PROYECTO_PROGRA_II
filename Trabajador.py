@@ -66,7 +66,6 @@ class Trabajador(Persona):
         # We get the current data of the worker with the given ID
         Trabajador.miconexion.execute("SELECT * FROM trabajador WHERE idTrabajador = '%s'" % id)
         datos = Trabajador.miconexion.fetchone()
-
         # Prints the current data
         print(f"Datos actuales del trabajador: {datos}")
 
@@ -144,3 +143,7 @@ class Trabajador(Persona):
         Trabajador.miconexion.execute( "SELECT idTrabajador, nombre, apell_1, apell_2, anho_nacimiento, genero, idRol FROM trabajador WHERE activo = True")
         datos = Trabajador.miconexion.fetchall()
         return datos
+    
+    
+    
+    
