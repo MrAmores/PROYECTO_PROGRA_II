@@ -120,8 +120,8 @@ class Rol():
     def BorraRol_prueba(id):
         consulta = "DELETE FROM rol WHERE idRol = %s"
         Rol.miconexion.execute(consulta, (id,))
-        Rol.miconexion.commit()
-        print("Se ha borrado el rol exitosamente.")
+        Rol.conexion.commit()
+        print("\n----Se ha borrado el rol exitosamente----\n")
            
     @staticmethod            
     def select_trabajadores():
