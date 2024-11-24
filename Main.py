@@ -388,7 +388,7 @@ def mostrar_menu_servicio():
                 
             elif opcion == 2:
                 objServicio.listar()
-                objServicio.modificaServicio(tipo= input("Digite el tipo: "), descripcion= input("Digite la descripción: "), precio= float(input("Digite el precio: ")), id= int(input("Digite el id: ")))
+                objServicio.modificaServicio(tipo= validaString("Digite el tipo: "), descripcion= validaString("Digite la descripción: "), precio= float(validaFloatPositivo("Digite el precio: ")), id= int(validaIntPositivo("Digite el id: ")))
                 pass
             elif opcion == 3:
                 pass
