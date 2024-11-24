@@ -17,7 +17,13 @@ class Trabajador(Persona):
 
     #We capture data to insert it
     def capturaDatosNuevos(self):
-        self.identificacion = validaString("Digite el número de identificación del trabajador: ").upper()
+        while True:
+            self.identificacion = validaString("Digite el número de identificación del trabajador: ").upper()
+            Trabajador.miconexion.execute("SELECT COUNT(*) FROM trabajador WHERE idTrabajador = %s", (self.identificacion,))
+            if Trabajador.miconexion.fetchone()[0] > 0:
+                print("\n----El ID del trabajador ya existe. Por favor, ingrese un ID único----\n")
+            else:
+                break
         self.nombre = validaString("Digite el nombre del trabajador: ")
         self.apellido1 = validaString("Digite el primer apellido del trabajador: ")
         self.apellido2 = validaString("Digite el segundo apellido del trabajador: ")
@@ -40,9 +46,9 @@ class Trabajador(Persona):
                     self.idRol = idSeleccionado
                     break
                 else:
-                    print("ID no encontrado. Intente nuevamente.")
+                    print("\n----El ID del rol no se encontró en el sistema. Por favor, intente nuevamente----\n")
             except ValueError:
-                print("Ingrese un número entero válido para el ID del rol")
+                print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
         self.activo = True
 
     #Query to insert new data into the database
@@ -51,14 +57,15 @@ class Trabajador(Persona):
         datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.anhoNacimiento,self.genero,self.activo,self.idRol)
         Trabajador.miconexion.execute(ingreso, datos)
         Trabajador.conexion.commit()
+        print("\n==========================================\n")
         print("Se ha ingresado al trabajador exitosamente.")
+        print("\n==========================================\n")
 
     #We capture data to do modifications
     def capturaDatosMod(self, id):
         # We get the current data of the worker with the given ID
         Trabajador.miconexion.execute("SELECT * FROM trabajador WHERE idTrabajador = '%s'" % id)
         datos = Trabajador.miconexion.fetchone()
-
         # Prints the current data
         print(f"Datos actuales del trabajador: {datos}")
 
@@ -85,9 +92,9 @@ class Trabajador(Persona):
                     idRol = idSeleccionado
                     break
                 else:
-                    print("ID no encontrado. Intente nuevamente.")
+                    print("\n----El ID del rol no se encontró en el sistema. Por favor, intente nuevamente----\n")
             except ValueError:
-                print("Ingrese un número entero válido para el ID del rol.")
+                print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
 
         #We call the method to update data
         self.modificaDatos(nombre, apell_1, apell_2, anho_nacimiento, genero, idRol, id)
@@ -104,7 +111,9 @@ class Trabajador(Persona):
         datos = (nombre, apell_1, apell_2, anho_nacimiento, genero, idRol, id)
         Trabajador.miconexion.execute(modificar, datos)
         Trabajador.conexion.commit()
+        print("\n====================================================\n")
         print("Se han modificado los datos del trabajador exitosamente.")
+        print("\n====================================================\n")
 
     #Prints all information in the database
     def listaDatos(self):
@@ -113,18 +122,20 @@ class Trabajador(Persona):
         Trabajador.miconexion.execute("select * from trabajador")
         datos = Trabajador.miconexion.fetchall()
         if not datos:  # If the list is empty
-            print("No se encuentran trabajadores activos en el sistema.")
+            print("\n----No se encuentran trabajadores activos en el sistema.----\n")
         else:
             for i in datos:
                 print(i)
 
     #Query to "delete" data from the database
     def desactiva(self, id):
-        modificar = "UPDATE trabajador SET activo = %s WHERE idTrabajador = %s"
-        datos = (False, id)
+        modificar = "UPDATE trabajador SET activo = %s, idRol = %s WHERE idTrabajador = %s"
+        datos = (False,None,id)
         Trabajador.miconexion.execute(modificar, datos)
         Trabajador.conexion.commit()
+        print("\n========================================\n")
         print("Se ha borrado el trabajador exitosamente.")
+        print("\n========================================\n")
 
     #Prints currently active workers
     def trabajadoresActivos(self):
@@ -132,3 +143,7 @@ class Trabajador(Persona):
         Trabajador.miconexion.execute( "SELECT idTrabajador, nombre, apell_1, apell_2, anho_nacimiento, genero, idRol FROM trabajador WHERE activo = True")
         datos = Trabajador.miconexion.fetchall()
         return datos
+    
+    
+    
+    

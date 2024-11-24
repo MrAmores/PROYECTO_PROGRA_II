@@ -6,5 +6,5 @@ def conexionDB():
         password = '2006',
         port= '3306',
         database= 'crucero'
-    ) 
+    )
     return conexion

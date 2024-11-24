@@ -331,6 +331,8 @@ def mostrar_menu_rol():
                         print("Ingrese un número entero válido para el ID.")
             elif opcion == 3:
                 listRoles = objRol.returnListaRol()
+                listaTrabajadores = objRol.select_trabajadores()
+                idRolesOcupados = [rol[2] for rol in listaTrabajadores]  # Extraer IDs válidos de las tuplas
                 # Validate if there are active workers
                 if not listRoles:  # If the list is empty
                     print("No se encuentran roles en el sistema.")
@@ -342,10 +344,12 @@ def mostrar_menu_rol():
                 while True:
                     try:
                         idSeleccionado = int(input("Digite el ID del rol que desea borrar: ").strip())
-
                         # Checks if the ID is in the list of available roles
-                        if any(rol[0] == idSeleccionado for rol in listRoles):
-                            objRol.BorraRol(idSeleccionado)
+                        if idSeleccionado in idRolesOcupados:
+                            print("No se puede borrar este rol porque esta ocupado por un trabajador")
+                            break
+                        elif any(rol[0] == idSeleccionado for rol in listRoles):
+                            objRol.BorraRol_prueba(idSeleccionado)
                             break
                         else:
                             print("ID no encontrado. Intente nuevamente.")

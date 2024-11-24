@@ -75,6 +75,7 @@ class Cabina():
         print("\n======================================================")
         print("Se han modificado los datos de la cabina exitosamente.")
         print("======================================================\n")
+        
     def listar(self):
         print("\nListado de cabinas en el sistema:")
         # Execute query and list data
