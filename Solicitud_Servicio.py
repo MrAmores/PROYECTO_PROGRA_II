@@ -8,12 +8,12 @@ class SoliServicio():
         self.fecha=fecha
         self.hora=hora
         
-    def registrar(self):
+    def capturaDatos(self):
         pass
     
-    def modificar(self):
+    def ingresaSolicitudServicio(self):
         pass
-
+    
+    
     def listar(self):
         pass
-    

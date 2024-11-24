@@ -1,9 +1,9 @@
 import mysql.connector
 def conexionDB():
     conexion = mysql.connector.connect(
-        host= '127.0.0.1',
+        host= 'localhost',
         user ='root',
-        password = '2006',
+        password = 'esteban2511',
         port= '3306',
         database= 'crucero'
     )

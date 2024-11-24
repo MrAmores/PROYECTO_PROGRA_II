@@ -1,60 +1,60 @@
-#Validates that a string data type is not empty
+# Validates that a string is not empty or contains only spaces
 def validaString(mensaje):
     while True:
         dato = input(mensaje).strip()
         if dato:
             return dato
         else:
-            print("El dato no puede estar vacío o contener solo espacios")
+            print("\nEl dato no puede estar vacío o contener solo espacios\n")
 
-#Validates the entry of a positive float type number
-def validaFloatPositivo(mensaje,):
+# Validates the entry of a positive float number
+def validaFloatPositivo(mensaje):
     while True:
         try:
-            dato = float(input(mensaje).strip())
+            dato = float(input(mensaje).strip())  # Converts the input to a float
             if dato > 0:
                 return dato
             else:
-                print("El valor debe ser un número positivo")
+                print("\nEl valor debe ser un número positivo\n")  # Ensures the value is positive
         except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número válido.")
+            print("\nEntrada inválida. Por favor, ingrese un número válido.\n")  # Handles invalid input
 
-#Validates the entry of a positive int type number
+# Validates the entry of a positive integer number
 def validaIntPositivo(mensaje):
     while True:
         try:
-            dato = int(input(mensaje).strip())
+            dato = int(input(mensaje).strip())  # Converts the input to an integer
             if dato > 0:
                 return dato
             else:
-                print("El valor debe ser un número positivo")
+                print("\nEl valor debe ser un número positivo\n")  # Ensures the value is positive
         except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número válido.")
+            print("\nEntrada inválida. Por favor, ingrese un número válido.\n")  # Handles invalid input
 
-#Validates the gender
+# Validates the input for gender selection
 def validaGenero():
     while True:
         gen = input("""
             Seleccione el género:
             F - Femenino
             M - Masculino
-            """).strip().upper()
+            """).strip().upper()  # Converts input to uppercase for consistency
 
         if gen == "F":
-            return "Femenino"
+            return "Femenino"  # Returns "Femenino" if input is 'F'
         elif gen == "M":
-            return "Masculino"
+            return "Masculino"  # Returns "Masculino" if input is 'M'
         else:
-            print("Opción no válida. Ingrese 'F' para Femenino o 'M' para Masculino.")
+            print("\nOpción no válida. Ingrese 'F' para Femenino o 'M' para Masculino.\n")  # Invalid input message
 
-#Validates the year of birth
+# Validates the year of birth to be between 1901 and 2155
 def validaAnhoNacimiento(mensaje):
     while True:
         try:
-            dato = int(input(mensaje).strip())
+            dato = int(input(mensaje).strip())  # Converts the input to an integer
             if 1901 <= dato <= 2155:
-                return dato
+                return dato  # Ensures the year is within the valid range
             else:
-                print("El año debe estar entre 1901 y 2155.")
+                print("\nEl año debe estar entre 1901 y 2155.\n")  # Range validation message
         except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número válido para el año.")
+            print("\nEntrada inválida. Por favor, ingrese un número válido para el año.\n")  # Handles invalid input

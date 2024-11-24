@@ -12,7 +12,6 @@ from Validaciones import (
 class Pasajero(Persona):
     conexion = conexionDB()
     miconexion = conexion.cursor()
-    
     def __init__(self, identificacion, nombre, apellido1, apellido2, anhoNacimiento, genero, activo, idCabina):
         super().__init__(identificacion, nombre, apellido1, apellido2, anhoNacimiento, genero, activo)
         self.idCabina = idCabina
@@ -48,7 +47,7 @@ class Pasajero(Persona):
              while True:
                 try:
                     cabina = int(input("Seleccione el ID de la cabina: ").strip())
-                    if cabina in ids_disponibles:  # Verificar si el ID existe en la lista de IDs disponibles
+                    if cabina in ids_disponibles: # Check if the ID exists in the list of available IDs
                         self.idCabina = cabina
                         self.nombre = validaString("Digite el nombre del pasajero: ")
                         self.apellido1 = validaString("Digite el primer apellido del pasajero: ")
@@ -64,11 +63,10 @@ class Pasajero(Persona):
                     print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")
                             
     def ingresaDatos(self): # ABSTRACT METHOD 
-        # Consulta SQL de inserción
+        # Insert SQL query
         ingreso = "INSERT INTO pasajero (idPasajero, nombre, apell_1, apell_2, anho_nacimiento, genero, activo, idCabina) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.anhoNacimiento,self.genero,self.activo,self.idCabina)
-        # Ejecutar la consulta e ingresar datos
-        Pasajero.miconexion.execute(ingreso, datos)
+        Pasajero.miconexion.execute(ingreso, datos)  # Execute the query and enter data
         Pasajero.conexion.commit()
         print("\n=====================================\n")
         print("Se ha ingresado al pasajero exitosamente.")
@@ -77,9 +75,12 @@ class Pasajero(Persona):
     def capturaDatosMod(self, id): # ABSTRACT METHOD 
         # We get the current data of the worker with the given ID
         Pasajero.miconexion.execute("SELECT * FROM pasajero WHERE idPasajero = '%s'" % id)
-        datos = Pasajero.miconexion.fetchone()
+        dato = Pasajero.miconexion.fetchone()
         # Prints the current data
-        print(f"Datos actuales del pasajero: {datos}")
+        print(f"Datos actuales del pasajero:")
+        print(f"{'ID':<15} {'Nombre':<20} {'Apellido 1':<20} {'Apellido 2':<20} {'Año nacimiento':<15} {'Genero':<10} {'Número de cabina':<20}")
+        print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15} {dato[5]:<10} {dato[6]:<20}")
+        print("")
         # New data validation
         nombre = validaString("Digite el nombre del pasajero: ")
         apell_1 = validaString("Digite el primer apellido del pasajero: ")
@@ -105,32 +106,43 @@ class Pasajero(Persona):
         print("Se han modificado los datos del pasajero exitosamente.")
         print("\n====================================================\n")
     
-    def listaDatos(self):# ABSTRACT METHOD 
-        print("Listado de pasajeros en el sistema")
-        # Execute query and list data
+    def listaDatos(self):  # ABSTRACT METHOD
+        print("\nListado de pasajeros en el sistema:\n")
+
+        # Execute query to list data
         Pasajero.miconexion.execute("SELECT * FROM pasajero WHERE activo != 0")
         datos = Pasajero.miconexion.fetchall()
-        for i in datos:
-            print(f"Identificación: {i[0]}, Nombre: {i[1]}, Apellido 1: {i[2]}, Apellido 2: {i[3]}, Año de Nacimiento: {i[4]}, Género: {i[5]}, Activo: {i[6]}, ID Cabina: {i[7]}")
+
+        if not datos:  # If there are no active passengers
+            print("\n----No se encuentran pasajeros activos en el sistema----\n")
+        else:
+            # Table header
+            print(f"{'Identificación':<15} {'Nombre':<20} {'Apellido 1':<15} {'Apellido 2':<15} {'Año Nac':<10} {'Género':<10} {'Activo':<10} {'ID Cabina':<10}")
+
+            # Data rows
+            for i in datos:  
+                idCabina = i[7] if i[7] is not None else "N/A"  # Manejo de None
+                print(f"{i[0]:<15} {i[1]:<20} {i[2]:<15} {i[3]:<15} {i[4]:<10} {i[5]:<10} {i[6]:<10} {idCabina:<10}")
+
+
             
     def desactiva(self, id):# ABSTRACT METHOD 
         modificar = "UPDATE pasajero SET activo = %s WHERE idPasajero = %s"
         datos = (False, id)
-        # Ejecutar la consulta y inactivar datos
-        Pasajero.miconexion.execute(modificar, datos)
+        Pasajero.miconexion.execute(modificar, datos)  # Execute the query and enter data
         Pasajero.conexion.commit()
         print("\n=======================================")
         print("Se ha borrado el pasajero exitosamente.")
-        print("\n=====================================\n")
+        print("=======================================\n")
                
         
     @staticmethod
     def select_pasajero():
-        # Query para obtener las cabinas
+        # Query to obtain the booths
         consulta = "SELECT idPasajero,nombre,CONCAT(apell_1, ' ', apell_2), anho_nacimiento,genero FROM pasajero WHERE activo != 0 "
         Pasajero.miconexion.execute(consulta)
-        pasajeros = Pasajero.miconexion.fetchall()  # Retorna lista de tuplas
-        return pasajeros
+        pasajeros = Pasajero.miconexion.fetchall()  
+        return pasajeros  # Return list of tuples
     
            
     

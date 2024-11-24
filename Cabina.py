@@ -1,10 +1,12 @@
 from Conexion import conexionDB
 from Validaciones import *
-class Cabina():
+
+class Cabina:
     conexion = conexionDB()
     miconexion = conexion.cursor()
 
     def __init__(self, idCabina, capacidad, disponibilidad, tamanho, precio):
+        # Initializes a Cabina object with ID, capacity, availability, size, and price
         self.idCabina = idCabina
         self.capacidad = capacidad
         self.disponibilidad = disponibilidad
@@ -12,7 +14,7 @@ class Cabina():
         self.precio = precio
 
     def capturaDatos(self):
-        # Validation of idCabina
+        # Captures and validates data for a new cabin
         while True:
             self.idCabina = validaIntPositivo("Digite el ID de la cabina: ")
             # Check if the idCabina already exists in the database
@@ -22,7 +24,7 @@ class Cabina():
             else:
                 self.disponibilidad = True
                 break
-                            
+        
         # Validation of capacity
         self.capacidad = validaIntPositivo("Digite la capacidad de personas que permite la cabina: ")
         
@@ -51,44 +53,44 @@ class Cabina():
         self.precio = validaFloatPositivo("Digite el precio de la cabina: ")
            
     def ingresaCabina(self):
-        # Consulta SQL de inserción
+        # Inserts a new cabin into the database
         ingreso = "INSERT INTO cabina (idCabina, capacidad, disponibilidad, tamanho, precio) VALUES (%s, %s, %s, %s, %s)"
         datos = (self.idCabina, self.capacidad, self.disponibilidad, self.tamanho, self.precio)
-        # Ejecutar la consulta e ingresar datos
-        Cabina.miconexion.execute(ingreso, datos)
+        Cabina.miconexion.execute(ingreso, datos)  # Execute the query and enter data
         Cabina.conexion.commit()
         print("\n=======================================")
         print("Se ha ingresado la cabina exitosamente.")
         print("=======================================\n")
 
-    def modificar(self,capacidad, disponibilidad, tamanho, precio, id):
-        # Consulta SQL de modificación
-        modificar = ("update cabina set capacidad = %s, "
-         "disponibilidad = %s, "
-         "tamanho = %s,"
-         "precio = %s"
-         "where idCabina = %s")
+    def modificar(self, capacidad, disponibilidad, tamanho, precio, id):
+        # Modifies an existing cabin in the database
+        modificar = ( 
+            "UPDATE cabina SET capacidad = %s, "
+            "disponibilidad = %s, "
+            "tamanho = %s,"
+            "precio = %s "
+            "WHERE idCabina = %s")
         datos = (capacidad, disponibilidad, tamanho, precio, id)
-        # Ejecutar la consulta y modificar datos
-        Cabina.miconexion.execute(modificar, datos)
+        Cabina.miconexion.execute(modificar, datos)  # Execute the query and modify data
         Cabina.conexion.commit()
         print("\n======================================================")
         print("Se han modificado los datos de la cabina exitosamente.")
         print("======================================================\n")
         
     def listar(self):
-        print("\nListado de cabinas en el sistema:")
-        # Execute query and list data
-        Cabina.miconexion.execute("select * from cabina")
+        # Lists all cabins in the system
+        print("\nListado de cabinas en el sistema:\n")
+        Cabina.miconexion.execute("SELECT * FROM cabina")  # Execute query and list data
         datos = Cabina.miconexion.fetchall()
-        for i in datos:
-            print(f"ID Cabina: {i[0]}, Capacidad: {i[1]}, Disponibilidad: {i[2]}, Tamaño: {i[3]}, Precio: {i[4]}")
-
-    def desactivar(self,id):
+        print(f"{'ID Cabina':<10} {'Capacidad':<15} {'Disponibilidad':<15} {'Tamaño':<15} {'Precio':<10}")
+        for dato in datos:
+            print(f"{dato[0]:<10} {dato[1]:<15} {dato[2]:<15} {dato[3]:<15} {dato[4]:<10.2f}")
+            
+    def desactivar(self, id):
+        # Marks a cabin as unavailable in the database
         modificar = "UPDATE cabina SET disponibilidad = %s WHERE idCabina = %s"
         datos = (False, id)
-        # Ejecutar la consulta y inactivar datos
-        Cabina.miconexion.execute(modificar, datos)
+        Cabina.miconexion.execute(modificar, datos)  # Execute the query and inactivate data
         Cabina.conexion.commit()
         print("\n=====================================")
         print("Se ha borrado la cabina exitosamente.")
@@ -96,38 +98,46 @@ class Cabina():
         
     @staticmethod
     def obtener_cabinas_disponibles(acompanantes):
-            capacidad_cabina = acompanantes + 1
-            # Query to filter available cabins according to required capacity
-            consulta = """
-            SELECT idCabina,capacidad,tamanho,precio FROM cabina
-            WHERE disponibilidad = TRUE AND capacidad = %s
-            ORDER BY capacidad;
-            """
-            Cabina.miconexion.execute(consulta, (capacidad_cabina,))
-            cabinas_disponibles = Cabina.miconexion.fetchall()
-            
-            # Collect the IDs of the available booths in a list
-            ids_disponibles = [cabina[0] for cabina in cabinas_disponibles]
-            
-            # Display the results to the user
-            if cabinas_disponibles:
-                print(f"\nCabinas disponibles para {capacidad_cabina} personas:")
-                for cabina in cabinas_disponibles:
-                    print(f"ID: {cabina[0]}, Capacidad: {cabina[1]}, Disponibilidad: {cabina[2]}, Tamaño: {cabina[3]}, Precio: {cabina[4]}")
-                    
-            return ids_disponibles
-        
+        # Retrieves available cabins based on the required capacity
+        capacidad_cabina = acompanantes + 1
+        consulta = """
+        SELECT idCabina, capacidad, tamanho, precio FROM cabina
+        WHERE disponibilidad = TRUE AND capacidad = %s
+        ORDER BY capacidad;
+        """
+        Cabina.miconexion.execute(consulta, (capacidad_cabina,))
+        cabinas_disponibles = Cabina.miconexion.fetchall()
+
+        # Collects and displays available cabins
+        ids_disponibles = [cabina[0] for cabina in cabinas_disponibles]
+        if cabinas_disponibles:
+            print(f"\nCabinas disponibles para {capacidad_cabina} personas:\n")
+            print(f"{'ID':<10} {'Capacidad':<15} {'Tamaño':<15} {'Precio':<10}")
+            for cabina in cabinas_disponibles:
+                print(f"{cabina[0]:<10} {cabina[1]:<15} {cabina[2]:<15} {cabina[3]:<10.2f}")
+        return ids_disponibles
+
     @staticmethod
     def pasar_cabina_a_ocupada(id_Cabina):
-        update = ("UPDATE cabina SET disponibilidad = FALSE WHERE idCabina = %s  ")
-        Cabina.miconexion.execute(update,(id_Cabina,))
+        # Marks a cabin as occupied in the database
+        update = "UPDATE cabina SET disponibilidad = FALSE WHERE idCabina = %s"
+        Cabina.miconexion.execute(update, (id_Cabina,))
         Cabina.conexion.commit()
-        
+
     @staticmethod
     def select_cabina():
-        # Query para obtener las cabinas
+        # Retrieves all cabins from the database
         consulta = "SELECT idCabina, capacidad, tamanho, disponibilidad, precio FROM cabina"
         Cabina.miconexion.execute(consulta)
-        cabinas = Cabina.miconexion.fetchall()  # Retorna lista de tuplas
-        return cabinas
-    
+        cabinas = Cabina.miconexion.fetchall()
+        return cabinas  # Return list of tuples
+
+    def cabinas4personas(self):
+        Cabina.miconexion.execute("SELECT * FROM cabina WHERE capacidad = 4")  # Execute query and list data
+        datos = Cabina.miconexion.fetchall()
+        if not datos:
+            print("\n----Listado de cabinas en el sistema:----\n")
+        else:
+            print(f"{'ID Cabina':<10} {'Capacidad':<15} {'Disponibilidad':<15} {'Tamaño':<15} {'Precio':<10}")
+            for dato in datos:
+                print(f"{dato[0]:<10} {dato[1]:<15} {dato[2]:<15} {dato[3]:<15} {dato[4]:<10.2f}")

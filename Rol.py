@@ -1,19 +1,20 @@
 from Conexion import conexionDB
 from Validaciones import validaString, validaFloatPositivo, validaIntPositivo
 
-class Rol():
-    conexion = conexionDB()  # Se establece una única conexión para toda la clase
+class Rol:
+    conexion = conexionDB()  # Establish a single database connection for the class
     miconexion = conexion.cursor()
-    
+
     def __init__(self, idRol, nombre, descripcion, departamento, salario):
+        # Initializes a Rol object with ID, name, description, department, and salary
         self.idRol = idRol
         self.nombre = nombre
         self.descripcion = descripcion
         self.departamento = departamento
         self.salario = salario
 
-    #We capture data to insert it
     def capturaNuevoR(self):
+        # Captures data for a new role and validates each field
         while True:
             self.idRol = validaIntPositivo("Digite el ID del rol: ")
             Rol.miconexion.execute("SELECT COUNT(*) FROM rol WHERE idRol = %s", (self.idRol,))
@@ -24,37 +25,39 @@ class Rol():
         self.nombre = validaString("Digite el nombre del rol: ")
         self.descripcion = validaString("Digite la descripción del rol: ")
         self.departamento = validaString("Digite el departamento del rol: ")
-        self.salario = validaFloatPositivo("Digite el salario:")
+        self.salario = validaFloatPositivo("Digite el salario: ")
 
-    #Query to insert new data into the database
     def ingresaRol(self):
+        # Inserts a new role into the database
         ingreso = "INSERT INTO rol (idRol, nombre, descripcion, departamento, salario) VALUES (%s, %s, %s, %s, %s)"
         datos = (self.idRol, self.nombre, self.descripcion, self.departamento, self.salario)
         Rol.miconexion.execute(ingreso, datos)
         Rol.conexion.commit()
+        print("\n==================================\n")
         print("Se ha ingresado el rol exitosamente.")
+        print("\n==================================\n")
 
-    # We capture data to do modifications
     def capturaModR(self, id):
-        # We get the current data of the worker with the given ID
+        # Captures new data to modify an existing role
         Rol.miconexion.execute("SELECT * FROM rol WHERE idRol = '%s'" % id)
-        datos = Rol.miconexion.fetchone()
+        dato = Rol.miconexion.fetchone()
+        print(f"Datos actuales del rol: ")  # Displays current data for the role
+        print(f"{'ID':<15} {'Nombre':<20} {'Descripción 1':<20} {'Departamento 2':<20} {'Salario':<15}")
+        for i in dato:
+            print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15}")
 
-        # Prints the current data
-        print(f"Datos actuales del rol: {datos}")
-
-        # New data validation
+        # Captures new data
         nombre = validaString("Digite el nombre del rol: ")
         descripcion = validaString("Digite la descripción del rol: ")
         departamento = validaString("Digite el departamento del rol: ")
         salario = validaFloatPositivo("Digite el salario: ")
 
-        # We call the method to update data
+        # Calls the method to update the role
         self.modificaRol(nombre, descripcion, departamento, salario, id)
 
-    # Query to uptade existing data in the database
     def modificaRol(self, nombre, descripcion, departamento, salario, id):
-        modificar = ("update rol set nombre = %s, "
+        # Updates an existing role in the database
+        modificar = ("UPDATE rol SET nombre = %s, "
                      "descripcion = %s, "
                      "departamento = %s,"
                      "salario = %s"
@@ -62,72 +65,42 @@ class Rol():
         datos = (nombre, descripcion, departamento, salario, id)
         Rol.miconexion.execute(modificar, datos)
         Rol.conexion.commit()
+        print("\n===============================================\n")
         print("Se han modificado los datos del rol exitosamente.")
+        print("\n===============================================\n")
 
-    #Prints all information in the database
     def listaRol(self):
-        print("Listado de roles en el sistema:")
-        print("ID, NOMBRE, DESCRIPCIÓN, DEPARTAMENTO, SALARIO")
-        Rol.miconexion.execute("select * from rol")
+        # Lists all roles in the database
+        Rol.miconexion.execute("SELECT * FROM rol")
         datos = Rol.miconexion.fetchall()
-        if not datos:  # If the list is empty
-            print("No se encuentran roles en el sistema.")
+        if not datos:  # Checks if no roles are found
+            print("\n----No se encuentran roles en el sistema.----\n")
         else:
-            for i in datos:
-                print(i)
+            print("Listado de roles en el sistema:")
+            print(f"{'ID':<10} {'Nombre':<20} {'Descripción':<30} {'Departamento':<20} {'Salario':<10}")
+            for rol in datos:
+                print(f"{rol[0]:<10} {rol[1]:<20} {rol[2]:<30} {rol[3]:<20} {rol[4]:<10.2f}")
 
-    # Prints and returns all the information in the database
     @staticmethod
     def returnListaRol():
-        # Captures data
+        # Retrieves all roles from the database
         Rol.miconexion.execute("SELECT * FROM rol;")
         datos = Rol.miconexion.fetchall()
         return datos
 
-    def obtenerTrabajadoresActivos(self, idRol):
-        try:
-            # Ejecuta la consulta para contar las personas activas con el idRol recibido como parámetro
-            consulta = ("SELECT COUNT(*) FROM trabajador WHERE idRol = %s AND activo = %s")
-            Rol.miconexion.execute(consulta, (idRol, True))  # Cambiado para pasar como tupla
-            datos = Rol.miconexion.fetchone()
-            print(f"cantidad activos ahora es {datos[0]}")  # Cambiado para acceder al primer elemento
-
-            if datos[0] > 0:
-                return True
-            else:
-                return False
-        except Exception as e:
-            print(f"Error en obtenerTrabajadoresActivos: {e}")
-            return False
-
-    def BorraRol(self, id):
-        try:
-            # Verificar si hay trabajadores activos con el idRol que se desea borrar
-            trabajadoresActivos = self.obtenerTrabajadoresActivos(id)
-
-            if trabajadoresActivos:
-                print("No se puede borrar el rol. Hay trabajadores activos asociados a este rol.")
-            else:
-                # Proceder a borrar el rol si no hay trabajadores activos
-                consulta = "DELETE FROM rol WHERE idRol = %s"
-                Rol.miconexion.execute(consulta, (id,))  # Esto está correcto
-                Rol.miconexion.commit()
-                print("Se ha borrado el rol exitosamente.")
-        except Exception as e:
-            print("Ocurrió un error al intentar borrar el rol:", e)
-            
-    @staticmethod        
-    def BorraRol_prueba(id):
-        consulta = "DELETE FROM rol WHERE idRol = %s"
-        Rol.miconexion.execute(consulta, (id,))
-        Rol.conexion.commit()
-        print("\n----Se ha borrado el rol exitosamente----\n")
-           
-    @staticmethod            
+    @staticmethod
     def select_trabajadores():
-        # Captura los datos de trabajadores activos
+        # Retrieves active workers from the database
         Rol.miconexion.execute("SELECT idTrabajador, nombre, idRol FROM trabajador WHERE activo = True")
         datos = Rol.miconexion.fetchall()
         return datos
 
-
+    @staticmethod
+    def BorraRol_prueba(id):
+        # Deletes a role from the database
+        consulta = "DELETE FROM rol WHERE idRol = %s"
+        Rol.miconexion.execute(consulta, (id,))
+        Rol.conexion.commit()
+        print("\n===============================\n")
+        print("Se ha borrado el rol exitosamente")
+        print("\n===============================\n")
