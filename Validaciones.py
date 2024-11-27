@@ -1,3 +1,5 @@
+from datetime import datetime
+
 # Validates that a string is not empty or contains only spaces
 def validaString(mensaje):
     while True:
@@ -58,3 +60,15 @@ def validaAnhoNacimiento(mensaje):
                 print("\nEl año debe estar entre 1901 y 2155.\n")  # Range validation message
         except ValueError:
             print("\nEntrada inválida. Por favor, ingrese un número válido para el año.\n")  # Handles invalid input
+
+def validar_fecha(mensaje):
+    while True:
+        try:
+            entrada = input(mensaje).strip()
+            fecha = datetime.strptime(entrada, "%Y-%m-%d")  # Convierte el texto a una fecha
+            if 1901 <= fecha.year <= 2155:  # Valida que el año esté dentro del rango
+                return fecha
+            else:
+                print("\nEl año debe estar entre 1901 y 2155.\n")
+        except ValueError:
+            print("\nEntrada inválida. Por favor, ingrese una fecha válida en formato YYYY-MM-DD.\n")

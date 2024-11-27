@@ -501,6 +501,32 @@ def mostrar_menu_solicitud_servicio():
         except ValueError as e: 
             print(f"\n----Error: {e}. Intente ingresar un número válido.----\n")
             
+def mostrar_menu_registro_pasajero_a_cabina():
+    while True:
+        print("""
+        --------------------------------------------------
+        ---  Gestión de Registro de pasajero a cabina  ---   
+        --------------------------------------------------
+        1 - Registrar pasajero a cabina
+        2 - Listar
+        3 - Volver al Menú Principal
+        -------------------------------------------
+        """)
+        try:
+            opcion = int(input("Seleccione una opción: ")) 
+            if opcion == 1:
+                pass
+            elif opcion == 2:
+                pass
+            elif opcion == 3:
+                pass
+            elif opcion == 4:
+                break 
+            else:
+                print("\n----Opción no válida. Intente de nuevo.----\n")
+        except ValueError as e: 
+            print(f"\n----Error: {e}. Intente ingresar un número válido.----\n")
+            
 # Ejecutar el programa
 if __name__ == "__main__":
     mostrar_menu_principal()
