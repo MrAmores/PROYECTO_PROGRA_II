@@ -1,5 +1,5 @@
 from Conexion import conexionDB
-from Validaciones import validaString, validaFloatPositivo, validaIntPositivo, validar_fecha
+from Validaciones import validaIntPositivo, validar_fecha
 from Cabina import Cabina
 from Pasajero import Pasajero
 
@@ -22,14 +22,13 @@ class RegistroEstadia:
             print("\n----No hay pasajeros registrados----\n")  # No passengers message
         else:
             ids_validos = [pasajero[0] for pasajero in listapasajeros]  # Collect valid IDs
-
             # Displays the list of passengers
             print("")
             print(f"{'ID':<10} {'Nombre':<20} {'Apellidos':<30}")
             for pasajero in listapasajeros:
                 print(f"{pasajero[0]:<10} {pasajero[1]:<20} {pasajero[2]:<30}")
             while True:
-                id_pasajero = input("\nDigite el ID del pasajero que desea registrar: ").strip()
+                id_pasajero = input("\nDigite el ID del pasajero que desea registrar a una cabina: ").strip().upper()
                 if id_pasajero in ids_validos:
                     self.idPasajero = id_pasajero   # Captures new data for the passenger
                     break
@@ -37,7 +36,7 @@ class RegistroEstadia:
                     print("\n----ID no válido. Intente nuevamente.----\n")
         while True:
             acompañantes = input("""
-            El pasajero viene con acompañantes?
+            Usted viene con acompañantes?
             1 - Si
             2 - No
             """
@@ -50,20 +49,65 @@ class RegistroEstadia:
                 break
             else:
                 print("\n ---- Opción invalida selecione 1 o 2 ----\n")
+                        
         ids_disponibles = Cabina.obtener_cabinas_disponibles(cantidad_pasajeros)
         if not ids_disponibles:
-            print("\n---- No hay cabinas disponibles ----\n")
+            print("\n----No hay cabinas disponibles----\n")
         else:
-            cabina = int(input("Seleccione el ID de la cabina: ").strip())
-            if cabina in ids_disponibles: # Check if the ID exists in the list of available IDs
-                self.idCabina = cabina
-                self.fechaDeIngreso = validar_fecha("Digite la fecha de ingreso en formato YYYY-MM-DD: ")
-    
-        self.ingresaRegistroEstadia(self.idCabina, self.idPasajero, self.fechaDeIngreso, self.fechaDeSalida)
-
-
+             while True:
+                try:
+                    cabina = int(input("Seleccione el ID de la cabina: ").strip())
+                    if cabina in ids_disponibles: # Check if the ID exists in the list of available IDs
+                        self.idCabina = cabina
+                        self.fechaDeIngreso = validar_fecha("Digite la fecha de ingreso en formato YYYY-MM-DD: ")
+                        self.fechaDeSalida = validar_fecha("Digite la fecha de salida en formato YYYY-MM-DD: ")
+                        Cabina.pasar_cabina_a_ocupada(self.idCabina)
+                        self.ingresaRegistroEstadia(self.idCabina, self.idPasajero, self.fechaDeIngreso, self.fechaDeSalida)
+                        break
+                    else:
+                        print("\n----El ID de la cabina ingresado no está disponible. Por favor, seleccione un ID válido de la lista----\n")
+                except ValueError:
+                    print("\n----Entrada inválida. Por favor, ingrese un número entero----\n")    
+        
+        
     def ingresaRegistroEstadia(self, idCabina, idPasajero, fechaEntrada, fechaSalida):
         consulta = ("INSERT INTO Registro (idCabina, idPasajero, fechaEntrada, fechaSalida) VALUES (%s,%s,%s,%s)")
         datos=(idCabina, idPasajero, fechaEntrada, fechaSalida)
         RegistroEstadia.miconexion.execute(consulta, datos)
+        RegistroEstadia.conexion.commit()
+        print("\n====================================================\n")
+        print("Se ha registrado al pasajero  a la cabina exitosamente.")
+        print("\n====================================================\n")
+        
+    def listar(self):
+        consulta = """
+        SELECT 
+        p.idPasajero AS id_pasajero, 
+        p.nombre, 
+        CONCAT(p.apell_1, ' ', p.apell_2) AS apellidos_completos,
+        c.idCabina AS numero_cabina, 
+        r.fechaEntrada AS fecha_entrada, 
+        r.fechaSalida AS fecha_salida
+        FROM 
+            Registro r
+        JOIN 
+            Pasajero p ON r.idPasajero = p.idPasajero
+        JOIN 
+            Cabina c ON r.idCabina = c.idCabina;
+        """
+        print("\nListado:\n")
+        # Execute query to list data
+        RegistroEstadia.miconexion.execute(consulta)
+        datos = RegistroEstadia.miconexion.fetchall()
+        if not datos:  # If there are no active passengers
+            print("\n----No se encuentran pasajeros activos en el sistema----\n")
+        else:
+            # Table header
+            print(f"{'ID Pasajero':<15} {'Nombre':<20} {'Apellidos':<30} {'Número Cabina':<15} {'Fecha Entrada':<15} {'Fecha Salida':<15}")
+            for i in datos:  
+                fecha_entrada = i[4].strftime('%Y-%m-%d')  # Formato de fecha para entrada
+                fecha_salida = i[5].strftime('%Y-%m-%d')   # Formato de fecha para salida
+                print(f"{i[0]:<15} {i[1]:<20} {i[2]:<30} {i[3]:<15} {fecha_entrada:<15} {fecha_salida:<15}")
+
+
         

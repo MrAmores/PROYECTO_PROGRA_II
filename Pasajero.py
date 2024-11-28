@@ -15,7 +15,7 @@ class Pasajero(Persona):
         
     def capturaDatosNuevos(self): # ABSTRACT METHOD 
         while True:
-            self.identificacion = validaString("Digite el número de identificación del pasajero: ")
+            self.identificacion = validaString("Digite el número de identificación del pasajero: ").upper()
             Pasajero.miconexion.execute("SELECT COUNT(*) FROM pasajero WHERE idPasajero = %s", (self.identificacion,))
             if Pasajero.miconexion.fetchone()[0] > 0:
                 print("\n----El ID del pasajero ya existe. Por favor, ingrese un ID único----\n")
@@ -28,7 +28,7 @@ class Pasajero(Persona):
         self.anhoNacimiento = validaAnhoNacimiento("Digite el año de nacimiento del pasajero: ")
         self.genero = validaGenero()
         #Cabina.pasar_cabina_a_ocupada(self.idCabina)
-        Pasajero.ingresaDatos()
+        self.ingresaDatos()
                             
     def ingresaDatos(self): # ABSTRACT METHOD 
         # Insert SQL query
@@ -89,7 +89,7 @@ class Pasajero(Persona):
 
             # Data rows
             for i in datos:  
-                idCabina = i[7] if i[7] is not None else "N/A"  # Manejo de None
+                #idCabina = i[7] if i[7] is not None else "N/A"  # Manejo de None
                 print(f"{i[0]:<15} {i[1]:<20} {i[2]:<15} {i[3]:<15} {i[4]:<10} {i[5]:<10} {i[6]:<10}")
 
     def desactiva(self, id):# ABSTRACT METHOD 

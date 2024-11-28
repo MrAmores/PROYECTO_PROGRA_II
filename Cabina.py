@@ -84,7 +84,10 @@ class Cabina:
         datos = Cabina.miconexion.fetchall()
         print(f"{'ID Cabina':<10} {'Capacidad':<15} {'Disponibilidad':<15} {'Tamaño':<15} {'Precio':<10}")
         for dato in datos:
-            print(f"{dato[0]:<10} {dato[1]:<15} {dato[2]:<15} {dato[3]:<15} {dato[4]:<10.2f}")
+            # Interpretar disponibilidad basada en 1 o 0
+            disponibilidad = "Disponible" if dato[2] == 1 else "No Disponible"
+            print(f"{dato[0]:<10} {dato[1]:<15} {disponibilidad:<15} {dato[3]:<15} {dato[4]:<10.2f}")
+
             
     def desactivar(self, id):
         # Marks a cabin as unavailable in the database
@@ -136,8 +139,10 @@ class Cabina:
         Cabina.miconexion.execute("SELECT * FROM cabina WHERE capacidad = 4")  # Execute query and list data
         datos = Cabina.miconexion.fetchall()
         if not datos:
-            print("\n----Listado de cabinas en el sistema:----\n")
+            print("\n----No hay cabinas para cuatro persoans en el sistema----\n")
         else:
             print(f"{'ID Cabina':<10} {'Capacidad':<15} {'Disponibilidad':<15} {'Tamaño':<15} {'Precio':<10}")
             for dato in datos:
-                print(f"{dato[0]:<10} {dato[1]:<15} {dato[2]:<15} {dato[3]:<15} {dato[4]:<10.2f}")
+                # Interpretar disponibilidad basada en 1 o 0
+                disponibilidad = "Disponible" if dato[2] == 1 else "No Disponible"
+                print(f"{dato[0]:<10} {dato[1]:<15} {disponibilidad:<15} {dato[3]:<15} {dato[4]:<10.2f}")

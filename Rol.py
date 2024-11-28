@@ -41,10 +41,11 @@ class Rol:
         # Captures new data to modify an existing role
         Rol.miconexion.execute("SELECT * FROM rol WHERE idRol = '%s'" % id)
         dato = Rol.miconexion.fetchone()
+        print("")
         print(f"Datos actuales del rol: ")  # Displays current data for the role
         print(f"{'ID':<15} {'Nombre':<20} {'Descripción 1':<20} {'Departamento 2':<20} {'Salario':<15}")
-        for i in dato:
-            print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15}")
+        print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15}")
+        print("")
 
         # Captures new data
         nombre = validaString("Digite el nombre del rol: ")

@@ -90,12 +90,11 @@ class Servicio:
                     print(f"\n----El ID '{id}' no existe en la base de datos----\n")
                 else:
                     break
-            tipo=validaString("Digite el tipo: "),
+            tipo=validaString("Digite el tipo: ")
             descripcion=validaString("Digite la descripción: ")
             precio=float(validaFloatPositivo("Digite el precio: "))    
-            
             modificar = "UPDATE servicio SET tipo = %s, descripcion = %s, precio = %s WHERE idServicio = %s"
-            datos = (id, tipo, descripcion, precio)
+            datos = (tipo, descripcion, precio,id)
             Servicio.miconexion.execute(modificar, datos)
             Servicio.conexion.commit()
             print("\n=====================================================")

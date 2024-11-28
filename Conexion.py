@@ -5,6 +5,6 @@ def conexionDB():
         user ='root',
         password = 'esteban2511',
         port= '3306',
-        database= 'crucero'
+        database= 'crucero_proyecto'
     )
     return conexion
