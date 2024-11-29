@@ -36,7 +36,7 @@ class Trabajador(Persona):
             print("\n----No se encuentran roles en el sistema----\n")
         else:
             print("Listado de roles en el sistema:")
-            print(f"{'ID':<10} {'Nombre':<20} {'Descripción':<30} {'Departamento':<20} {'Salario':<10}")
+            print(f"{"ID":<10} {"Nombre":<20} {"Descripción":<30} {"Departamento":<20} {"Salario":<10}")
             for rol in listRoles:
                 print(f"{rol[0]:<10} {rol[1]:<20} {rol[2]:<30} {rol[3]:<20} {rol[4]:<10.2f}")
         print("")        
@@ -84,7 +84,7 @@ class Trabajador(Persona):
 
         # Prints the current data
         print(f"Datos actuales del trabajador:")
-        print(f"{'ID':<15} {'Nombre':<20} {'Apellido 1':<20} {'Apellido 2':<20} {'Año nacimiento':<15} {'Genero':<10} {'Rol':<20}")
+        print(f"{"ID":<15} {"Nombre":<20} {"Apellido 1":<20} {"Apellido 2":<20} {"Año nacimiento":<15} {"Genero":<10} {"Rol":<20}")
         print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15} {dato[5]:<10} {dato[6]:<20}")
 
         # New data validation
@@ -100,7 +100,7 @@ class Trabajador(Persona):
             print("\n----No se encuentran roles en el sistema.----\n")
         else:
             print("Listado de roles en el sistema:")
-            print(f"{'ID':<15} {'Nombre':<20} {'Descripción':<15} {'Departamento':<15} {'Salario':<10}")
+            print(f"{"ID":<15} {"Nombre":<20} {"Descripción":<15} {"Departamento":<15} {"Salario":<10}")
             for i in listRoles:
                 print(f"{i[0]:<15} {i[1]:<20} {i[2]:<15} {i[2]:<15} {i[3]:<10}")
         # In the next lines the role is selected and this selection is validated
@@ -155,7 +155,7 @@ class Trabajador(Persona):
         # Encabezado de la tabla
         else:
             print("Listado de trabajadores en el sistema:")
-            print(f"{'ID':<15} {'Nombre':<20} {'Apellido 1':<20} {'Apellido 2':<20} {'Año nacimiento':<15} {'Genero':<10} {'Rol':<20}")
+            print(f"{"ID":<15} {"Nombre":<20} {"Apellido 1":<20} {"Apellido 2":<20} {"Año nacimiento":<15} {"Genero":<10} {"Rol":<20}")
             # Imprimir cada fila de datos
             for i in datos:
                 print(f"{i[0]:<15} {i[1]:<20} {i[2]:<20} {i[3]:<20} {i[4]:<15} {i[5]:<10} {i[6]:<20}")

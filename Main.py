@@ -4,6 +4,7 @@ from Rol import Rol
 from Cabina import Cabina
 from Servicio import Servicio
 from RegistroEstadia import RegistroEstadia
+from Solicitud_Servicio import SoliServicio
 from Validaciones import *
 
 # Displays the main menu and directs to the corresponding submenu based on user input
@@ -48,7 +49,7 @@ def mostrar_menu_principal():
         except ValueError as e:
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")  # Error message for invalid input
 
-# Displays the passenger management menu and performs actions based on the user's choice
+# Displays the passenger management menu and performs actions based on the user"s choice
 def mostrar_menu_pasajero():
     objPasajero = Pasajero(
         identificacion=None, nombre=None, apellido1=None, apellido2=None,
@@ -82,7 +83,7 @@ def mostrar_menu_pasajero():
 
                     # Displays the list of passengers
                     print("")
-                    print(f"{'ID':<10} {'Nombre':<20} {'Apellidos':<30}")
+                    print(f"{"ID":<10} {"Nombre":<20} {"Apellidos":<30}")
                     for pasajero in listapasajeros:
                         print(f"{pasajero[0]:<10} {pasajero[1]:<20} {pasajero[2]:<30}")
 
@@ -106,7 +107,7 @@ def mostrar_menu_pasajero():
 
                     # Displays the list of passengers
                     print("")
-                    print(f"{'ID':<10} {'Nombre':<20} {'Apellidos':<30}")
+                    print(f"{"ID":<10} {"Nombre":<20} {"Apellidos":<30}")
                     for pasajero in listapasajeros: 
                         print(f"{pasajero[0]:<10} {pasajero[1]:<20} {pasajero[2]:<30}")
 
@@ -158,15 +159,15 @@ def mostrar_menu_trabajador():
                     objTrabajador.ingresaDatos()
                 
             elif opcion == 2:
-                # Modify a worker's information
+                # Modify a worker"s information
                 listTrabajadores = objTrabajador.trabajadoresActivos()
                 if not listTrabajadores:
                     print("\n----No se encuentran trabajadores activos en el sistema----\n")
                 else:
                     print("Listado de trabajadores activos en el sistema:")
                     # Display table header for worker data
-                    print(f"{'Identificación':<15} {'Nombre':<15} {'Primer apellido':<20} {'Segundo apellido':<20} {'Año de nacimiento':<18} {'Género':<10} {'N°Rol':<10}")
-                    # Display each worker's data
+                    print(f"{"Identificación":<15} {"Nombre":<15} {"Primer apellido":<20} {"Segundo apellido":<20} {"Año de nacimiento":<18} {"Género":<10} {"N°Rol":<10}")
+                    # Display each worker"s data
                     for trabajador in listTrabajadores:
                         print(f"{trabajador[0]:<15} {trabajador[1]:<15} {trabajador[2]:<20} {trabajador[3]:<20} {trabajador[4]:<18} {trabajador[5]:<10} {trabajador[6]:<10}")
 
@@ -189,8 +190,8 @@ def mostrar_menu_trabajador():
                 else:
                     print("Listado de trabajadores activos en el sistema:")
                     # Display table header
-                    print(f"{'Identificación':<15} {'Nombre':<15} {'Apellido 1':<20} {'Apellido 2':<20} {'Año nacimiento':<15} {'Género':<10} {'Id rol':<10}")
-                    # Display each worker's data
+                    print(f"{"Identificación":<15} {"Nombre":<15} {"Apellido 1":<20} {"Apellido 2":<20} {"Año nacimiento":<15} {"Género":<10} {"Id rol":<10}")
+                    # Display each worker"s data
                     for trabajador in listTrabajadores:
                         print(f"{trabajador[0]:<15} {trabajador[1]:<15} {trabajador[2]:<20} {trabajador[3]:<20} {trabajador[4]:<15} {trabajador[5]:<10} {trabajador[6]:<10}")
 
@@ -252,8 +253,8 @@ def mostrar_menu_cabina():
                 else:
                     print("Listado de cabinas en el sistema:")
                     # Display table header
-                    print(f"{'ID Cabina':<10} {'Capacidad':<10} {'Tamaño':<15} {'Disponibilidad':<15} {'Precio':<10}")
-                    # Display each cabin's data
+                    print(f"{"ID Cabina":<10} {"Capacidad":<10} {"Tamaño":<15} {"Disponibilidad":<15} {"Precio":<10}")
+                    # Display each cabin"s data
                     for cabina in cabinas:
                         disponibilidad = "Disponible" if cabina[3] else "No Disponible"
                         print(f"{cabina[0]:<10} {cabina[1]:<10} {cabina[2]:<15} {disponibilidad:<15} {cabina[4]:<10.2f}")
@@ -309,8 +310,8 @@ def mostrar_menu_cabina():
                     break
                 ids_validos = [cabina[0] for cabina in cabinas]
                 # Display table header
-                print(f"{'ID Cabina':<10} {'Capacidad':<10} {'Tamaño':<15} {'Disponibilidad':<15} {'Precio':<10}")
-                # Display each cabin's data
+                print(f"{"ID Cabina":<10} {"Capacidad":<10} {"Tamaño":<15} {"Disponibilidad":<15} {"Precio":<10}")
+                # Display each cabin"s data
                 for cabina in cabinas:
                     disponibilidad = "Disponible" if cabina[3] else "No Disponible"
                     print(f"{cabina[0]:<10} {cabina[1]:<10} {cabina[2]:<15} {disponibilidad:<15} {cabina[4]:<10.2f}")
@@ -370,7 +371,7 @@ def mostrar_menu_rol():
                     print("Listado de roles en el sistema:")
                     
                     # Table header for roles
-                    print(f"{'ID':<10} {'Rol':<20} {'Descripción':<30} {'Departamento':<20} {'Salario':<10}")
+                    print(f"{"ID":<10} {"Rol":<20} {"Descripción":<30} {"Departamento":<20} {"Salario":<10}")
                     # Display formatted role data
                     for rol in listRoles:
                         print(f"{rol[0]:<10} {rol[1]:<20} {rol[2]:<30} {rol[3]:<20} {rol[4]:<10.2f}")
@@ -396,7 +397,7 @@ def mostrar_menu_rol():
                 else:
                     print("Listado de roles en el sistema:")
                     # Table header for roles
-                    print(f"{'ID':<5} {'Nombre':<20} {'Descripción':<30} {'Departamento':<20} {'Salario':<10}")
+                    print(f"{"ID":<5} {"Nombre":<20} {"Descripción":<30} {"Departamento":<20} {"Salario":<10}")
                     # Display formatted role data
                     for rol in listRoles:
                         print(f"{rol[0]:<5} {rol[1]:<20} {rol[2]:<30} {rol[3]:<20} {rol[4]:<10.2f}")
@@ -478,15 +479,15 @@ def mostrar_menu_servicio():
 
 
 def mostrar_menu_solicitud_servicio():
+    objSoliServicio = SoliServicio("","","","","","","")
     while True:
         print("""
         -------------------------------------------
         ---  Gestión de Solicitud de Servicios  ---   
         -------------------------------------------
         1 - Registrar Solicitud de Servicio
-        2 - Modificar Solicitud de Servicio
-        3 - Listar Solicitudes de Servicio
-        4 - Volver al Menú Principal
+        2 - Listar Solicitudes de Servicio
+        3 - Volver al Menú Principal
         -------------------------------------------
         """)
         try:
@@ -494,11 +495,9 @@ def mostrar_menu_solicitud_servicio():
             if opcion == 1:
                 pass
             elif opcion == 2:
-                pass
+                objSoliServicio.listar()
             elif opcion == 3:
-                pass
-            elif opcion == 4:
-                break 
+                break
             else:
                 print("\n----Opción no válida. Intente de nuevo.----\n")
         except ValueError as e: 

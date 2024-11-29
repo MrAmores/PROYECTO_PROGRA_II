@@ -82,7 +82,7 @@ class Cabina:
         print("\nListado de cabinas en el sistema:\n")
         Cabina.miconexion.execute("SELECT * FROM cabina")  # Execute query and list data
         datos = Cabina.miconexion.fetchall()
-        print(f"{'ID Cabina':<10} {'Capacidad':<15} {'Disponibilidad':<15} {'Tamaño':<15} {'Precio':<10}")
+        print(f"{"ID Cabina":<10} {"Capacidad":<15} {"Disponibilidad":<15} {"Tamaño":<15} {"Precio":<10}")
         for dato in datos:
             # Interpretar disponibilidad basada en 1 o 0
             disponibilidad = "Disponible" if dato[2] == 1 else "No Disponible"
@@ -115,7 +115,7 @@ class Cabina:
         ids_disponibles = [cabina[0] for cabina in cabinas_disponibles]
         if cabinas_disponibles:
             print(f"\nCabinas disponibles para {capacidad_cabina} personas:\n")
-            print(f"{'ID':<10} {'Capacidad':<15} {'Tamaño':<15} {'Precio':<10}")
+            print(f"{"ID":<10} {"Capacidad":<15} {"Tamaño":<15} {"Precio":<10}")
             for cabina in cabinas_disponibles:
                 print(f"{cabina[0]:<10} {cabina[1]:<15} {cabina[2]:<15} {cabina[3]:<10.2f}")
         return ids_disponibles
@@ -141,7 +141,7 @@ class Cabina:
         if not datos:
             print("\n----No hay cabinas para cuatro persoans en el sistema----\n")
         else:
-            print(f"{'ID Cabina':<10} {'Capacidad':<15} {'Disponibilidad':<15} {'Tamaño':<15} {'Precio':<10}")
+            print(f"{"ID Cabina":<10} {"Capacidad":<15} {"Disponibilidad":<15} {"Tamaño":<15} {"Precio":<10}")
             for dato in datos:
                 # Interpretar disponibilidad basada en 1 o 0
                 disponibilidad = "Disponible" if dato[2] == 1 else "No Disponible"

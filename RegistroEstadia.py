@@ -24,7 +24,7 @@ class RegistroEstadia:
             ids_validos = [pasajero[0] for pasajero in listapasajeros]  # Collect valid IDs
             # Displays the list of passengers
             print("")
-            print(f"{'ID':<10} {'Nombre':<20} {'Apellidos':<30}")
+            print(f"{"ID":<10} {"Nombre":<20} {"Apellidos":<30}")
             for pasajero in listapasajeros:
                 print(f"{pasajero[0]:<10} {pasajero[1]:<20} {pasajero[2]:<30}")
             while True:
@@ -103,10 +103,10 @@ class RegistroEstadia:
             print("\n----No se encuentran pasajeros activos en el sistema----\n")
         else:
             # Table header
-            print(f"{'ID Pasajero':<15} {'Nombre':<20} {'Apellidos':<30} {'Número Cabina':<15} {'Fecha Entrada':<15} {'Fecha Salida':<15}")
+            print(f"{"ID Pasajero":<15} {"Nombre":<20} {"Apellidos":<30} {"Número Cabina":<15} {"Fecha Entrada":<15} {"Fecha Salida":<15}")
             for i in datos:  
-                fecha_entrada = i[4].strftime('%Y-%m-%d')  # Formato de fecha para entrada
-                fecha_salida = i[5].strftime('%Y-%m-%d')   # Formato de fecha para salida
+                fecha_entrada = i[4].strftime("%Y-%m-%d")  # Formato de fecha para entrada
+                fecha_salida = i[5].strftime("%Y-%m-%d")   # Formato de fecha para salida
                 print(f"{i[0]:<15} {i[1]:<20} {i[2]:<30} {i[3]:<15} {fecha_entrada:<15} {fecha_salida:<15}")
 
 

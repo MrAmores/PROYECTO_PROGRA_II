@@ -43,11 +43,11 @@ def validaGenero():
             """).strip().upper()  # Converts input to uppercase for consistency
 
         if gen == "F":
-            return "Femenino"  # Returns "Femenino" if input is 'F'
+            return "Femenino"  # Returns "Femenino" if input is "F"
         elif gen == "M":
-            return "Masculino"  # Returns "Masculino" if input is 'M'
+            return "Masculino"  # Returns "Masculino" if input is "M"
         else:
-            print("\nOpción no válida. Ingrese 'F' para Femenino o 'M' para Masculino.\n")  # Invalid input message
+            print("\nOpción no válida. Ingrese F para Femenino o M para Masculino.\n")  # Invalid input message
 
 # Validates the year of birth to be between 1901 and 2155
 def validaAnhoNacimiento(mensaje):

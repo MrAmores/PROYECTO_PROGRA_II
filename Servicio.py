@@ -22,7 +22,7 @@ class Servicio:
                 Servicio.miconexion.execute(verificar_id, (self.idServicio,))
                 resultado = Servicio.miconexion.fetchone()
                 if resultado[0] > 0:
-                    print(f"\n----El ID '{self.idServicio}' ya existe. Por favor, ingrese un ID distinto---\n")
+                    print(f"\n----El ID {self.idServicio} ya existe. Por favor, ingrese un ID distinto---\n")
                 else:
                     break
             except ValueError:
@@ -87,7 +87,7 @@ class Servicio:
                 Servicio.miconexion.execute(verificar_id, (id,))
                 resultado = Servicio.miconexion.fetchone()
                 if resultado[0] == 0:
-                    print(f"\n----El ID '{id}' no existe en la base de datos----\n")
+                    print(f"\n----El ID {id} no existe en la base de datos----\n")
                 else:
                     break
             tipo=validaString("Digite el tipo: ")
@@ -108,7 +108,7 @@ class Servicio:
         print("Listado de servicios:")
         Servicio.miconexion.execute("SELECT idServicio, tipo, descripcion, precio FROM servicio")
         servicios = Servicio.miconexion.fetchall()
-        print(f"{'ID':<10} {'Tipo':<15} {'Descripción':<30} {'Precio':<10}")
+        print(f"{"ID":<10} {"Tipo":<15} {"Descripción":<30} {"Precio":<10}")
         for servicio in servicios:
             print(f"{servicio[0]:<10} {servicio[1]:<15} {servicio[2]:<30} {servicio[3]:<10.2f}")
 
@@ -122,7 +122,7 @@ class Servicio:
             Servicio.miconexion.execute(verificar_id, (id,))
             resultado = Servicio.miconexion.fetchone()
             if resultado[0] == 0:
-                print(f"\n----El ID '{id}' no existe en la base de datos. No se puede eliminar----\n")
+                print(f"\n----El ID {id} no existe en la base de datos. No se puede eliminar----\n")
                 return False
             eliminar = "DELETE FROM servicio WHERE idServicio = %s"
             datos = (id,)

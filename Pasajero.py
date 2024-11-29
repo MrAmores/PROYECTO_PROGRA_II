@@ -46,7 +46,7 @@ class Pasajero(Persona):
         dato = Pasajero.miconexion.fetchone()
         # Prints the current data
         print(f"Datos actuales del pasajero:")
-        print(f"{'ID':<15} {'Nombre':<20} {'Apellido 1':<20} {'Apellido 2':<20} {'Año nacimiento':<15} {'Genero':<10}")
+        print(f"{"ID":<15} {"Nombre":<20} {"Apellido 1":<20} {"Apellido 2":<20} {"Año nacimiento":<15} {"Genero":<10}")
         print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15} {dato[5]:<10}")
         print("")
         # New data validation
@@ -85,7 +85,7 @@ class Pasajero(Persona):
             print("\n----No se encuentran pasajeros activos en el sistema----\n")
         else:
             # Table header
-            print(f"{'Identificación':<15} {'Nombre':<20} {'Apellido 1':<15} {'Apellido 2':<15} {'Año Nac':<10} {'Género':<10} {'Activo':<10}")
+            print(f"{"Identificación":<15} {"Nombre":<20} {"Apellido 1":<15} {"Apellido 2":<15} {"Año Nac":<10} {"Género":<10} {"Activo":<10}")
 
             # Data rows
             for i in datos:  
@@ -105,7 +105,7 @@ class Pasajero(Persona):
     @staticmethod
     def select_pasajero():
         # Query to obtain the booths
-        consulta = "SELECT idPasajero,nombre,CONCAT(apell_1, ' ', apell_2), anho_nacimiento,genero FROM pasajero WHERE activo != 0 "
+        consulta = "SELECT idPasajero,nombre,CONCAT(apell_1, " ", apell_2), anho_nacimiento,genero FROM pasajero WHERE activo != 0 "
         Pasajero.miconexion.execute(consulta)
         pasajeros = Pasajero.miconexion.fetchall()  
         return pasajeros  # Return list of tuples
