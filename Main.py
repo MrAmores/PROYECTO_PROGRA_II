@@ -346,8 +346,7 @@ def mostrar_menu_cabina():
                 print("\n----Opción no válida. Intente de nuevo----\n")
         except ValueError as e: 
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")  
-   
-                              
+                                 
 def mostrar_menu_rol():
     # Display and handle options for role management
     objRol = Rol(idRol=None, nombre=None, descripcion=None, departamento=None, salario=None)
@@ -484,7 +483,6 @@ def mostrar_menu_servicio():
         except ValueError as e:
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")  
 
-
 def mostrar_menu_solicitud_servicio():
     #idSolicitud, idRegistro, idServicio, idTrabajador, fecha, hora
     objSoliServicio = SoliServicio(idSolicitud = None, idRegistro= None, idServicio= None, idTrabajador=None, fecha=None, hora= None)
@@ -540,5 +538,3 @@ def mostrar_menu_registro_pasajero_a_cabina():
 # Ejecutar el programa
 if __name__ == "__main__":
     mostrar_menu_principal()
-                                      
-
