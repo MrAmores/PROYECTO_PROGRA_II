@@ -26,6 +26,7 @@ class Cabina:
                 break
         
         # Validation of capacity
+        print("")
         self.capacidad = validaIntPositivo("Digite la capacidad de personas que permite la cabina: ")
         
         # Validation of size
@@ -36,6 +37,7 @@ class Cabina:
             2 - Mediana
             3 - Grande
             """)
+            print("")
             opcion = input("Digite el número correspondiente al tamaño de la cabina: ").strip()
             if opcion == "1":
                 self.tamanho = "Pequeña"
@@ -50,6 +52,7 @@ class Cabina:
                 print("\n----Opción inválida. Por favor, seleccione 1, 2 o 3----\n")         
 
         # Validation of price
+        print("")
         self.precio = validaFloatPositivo("Digite el precio de la cabina: ")
            
     def ingresaCabina(self):

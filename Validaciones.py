@@ -65,10 +65,19 @@ def validar_fecha(mensaje):
     while True:
         try:
             entrada = input(mensaje).strip()
-            fecha = datetime.strptime(entrada, "%Y-%m-%d")  # Convierte el texto a una fecha
-            if 1901 <= fecha.year <= 2155:  # Valida que el año esté dentro del rango
+            fecha = datetime.strptime(entrada, "%Y-%m-%d")  # Convert text to a date
+            if 1901 <= fecha.year <= 2155:  # Validates that the year is within the range
                 return fecha
             else:
                 print("\nEl año debe estar entre 1901 y 2155.\n")
         except ValueError:
             print("\nEntrada inválida. Por favor, ingrese una fecha válida en formato YYYY-MM-DD.\n")
+            
+def validar_hora(mensaje):
+    while True:
+        try:
+            entrada = input(mensaje).strip()
+            hora = datetime.strptime(entrada, "%H:%M:%S")  # Convert text to a time
+            return hora.time()  # Returns only the time part
+        except ValueError:
+            print("\nEntrada inválida. Por favor, ingrese una hora válida en formato HH:MM:SS.\n")            

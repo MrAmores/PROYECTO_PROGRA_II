@@ -64,7 +64,8 @@ def mostrar_menu_pasajero():
         2 - Modificar Pasajero
         3 - Eliminar Pasajero
         4 - Listar Pasajeros
-        5 - Volver al Menú Principal
+        5 - Listado Pasajeros hospedados
+        6 - Volver al Menú Principal
         ------------------------------
         """)
         try:
@@ -112,7 +113,7 @@ def mostrar_menu_pasajero():
                         print(f"{pasajero[0]:<10} {pasajero[1]:<20} {pasajero[2]:<30}")
 
                     while True:
-                        idPasajero = input("\nDigite el ID del pasajero a eliminar: ").strip()
+                        idPasajero = input("\nDigite el ID del pasajero a eliminar: ").strip().upper()
                         if idPasajero in ids_validos:
                             objPasajero.desactiva(idPasajero)  # Deactivates the passenger
                             break
@@ -120,8 +121,11 @@ def mostrar_menu_pasajero():
 
             elif opcion == 4:
                 objPasajero.listaDatos()  # Lists all active passengers
-
+                
             elif opcion == 5:
+                objPasajero.listaPasajerosConCabinas()   
+
+            elif opcion == 6:
                 print("\n----Volviendo al menú principal.----\n")  # Returns to the main menu
                 break
 
@@ -160,7 +164,7 @@ def mostrar_menu_trabajador():
                 
             elif opcion == 2:
                 # Modify a worker"s information
-                listTrabajadores = objTrabajador.trabajadoresActivos()
+                listTrabajadores = Trabajador.trabajadoresActivos()
                 if not listTrabajadores:
                     print("\n----No se encuentran trabajadores activos en el sistema----\n")
                 else:
@@ -173,7 +177,7 @@ def mostrar_menu_trabajador():
 
                     while True:
                         try:
-                            idSeleccionado = input("Digite el ID del trabajador que desea modificar: ").strip().upper()
+                            idSeleccionado = input("\nDigite el ID del trabajador que desea modificar: \n").strip().upper()
                             # Check if the ID is valid
                             if any(trabajador[0] == idSeleccionado for trabajador in listTrabajadores):
                                 objTrabajador.capturaDatosMod(idSeleccionado)
@@ -184,7 +188,7 @@ def mostrar_menu_trabajador():
                             print("\n----Ingrese un número válido para el ID----\n")
             elif opcion == 3:
                 # Deactivate a worker
-                listTrabajadores = objTrabajador.trabajadoresActivos()
+                listTrabajadores = Trabajador.trabajadoresActivos()
                 if not listTrabajadores:  # If no workers are active
                     print("\n----No se encuentran trabajadores activos en el sistema----\n")
                 else:
@@ -263,7 +267,8 @@ def mostrar_menu_cabina():
                 while True:
                         idCabina = validaIntPositivo("Digite ID de la cabina que desea modificar: ")
                         if idCabina in ids_validos:
-                            break        
+                            break
+                print("")                
                 capacidad = validaIntPositivo("Digite la nueva capacidad de la cabina: ")
                         
                 while True:
@@ -272,6 +277,7 @@ def mostrar_menu_cabina():
                     print("1 - Pequeña")
                     print("2 - Mediana")
                     print("3 - Grande")
+                    print("")
                     opcion = input("Digite el número correspondiente al tamaño de la cabina: ").strip()
                     if opcion == "1":
                         tamanho = "Pequeña"
@@ -284,12 +290,13 @@ def mostrar_menu_cabina():
                         break
                     else:
                         print("\n----Opción inválida. Por favor, seleccione 1, 2 o 3----\n")
-           
+                print("")    
                 while True:
                     # Select cabin availability
                     print("Seleccione el nuevo estado de la cabina")
                     print("1 - Disponible")
                     print("2 - Indisponible")
+                    print("")
                     opcion = input("Digite el número correspondiente al estado de la cabina: ").strip()
                     if opcion == "1":
                         estado = True
@@ -479,7 +486,8 @@ def mostrar_menu_servicio():
 
 
 def mostrar_menu_solicitud_servicio():
-    objSoliServicio = SoliServicio("","","","","","","")
+    #idSolicitud, idRegistro, idServicio, idTrabajador, fecha, hora
+    objSoliServicio = SoliServicio(idSolicitud = None, idRegistro= None, idServicio= None, idTrabajador=None, fecha=None, hora= None)
     while True:
         print("""
         -------------------------------------------
@@ -493,7 +501,7 @@ def mostrar_menu_solicitud_servicio():
         try:
             opcion = int(input("Seleccione una opción: ")) 
             if opcion == 1:
-                pass
+                objSoliServicio.capturaDatos()
             elif opcion == 2:
                 objSoliServicio.listar()
             elif opcion == 3:
@@ -508,9 +516,9 @@ def mostrar_menu_registro_pasajero_a_cabina():
     while True:
         print("""
         --------------------------------------------------
-        ---  Gestión de registro de pasajero a cabina  ---   
+        ---      Gestión de registro estadías          ---   
         --------------------------------------------------
-        1 - Registrar pasajero a cabina
+        1 - Registrar estadía
         2 - Listar
         3 - Volver al Menú Principal
         -------------------------------------------
