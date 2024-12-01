@@ -17,18 +17,20 @@ class Trabajador(Persona):
 
     #We capture data to insert it
     def capturaDatosNuevos(self):
-        while True:
-            self.identificacion = validaString("Digite el número de identificación del trabajador: ").upper()
-            Trabajador.miconexion.execute("SELECT COUNT(*) FROM trabajador WHERE idTrabajador = %s", (self.identificacion,))
-            if Trabajador.miconexion.fetchone()[0] > 0:
-                print("\n----El ID del trabajador ya existe. Por favor, ingrese un ID único----\n")
-            else:
-                break
+        # Recursive method to capture a new worker's data
+        self.identificacion = validaString("Digite el número de identificación del trabajador: ").upper()
+        Trabajador.miconexion.execute("SELECT COUNT(*) FROM trabajador WHERE idTrabajador = %s", (self.identificacion,))
+        # Check if the ID already exists
+        if Trabajador.miconexion.fetchone()[0] > 0:
+            print("\n----El ID del trabajador ya existe. Por favor, ingrese un ID único----\n")
+            return self.capturaDatosNuevos()  # Recursive call if ID is not unique
+        # Capture additional data after a valid ID is entered
         self.nombre = validaString("Digite el nombre del trabajador: ")
         self.apellido1 = validaString("Digite el primer apellido del trabajador: ")
         self.apellido2 = validaString("Digite el segundo apellido del trabajador: ")
         self.anhoNacimiento = validaAnhoNacimiento("Digite el año de nacimiento del trabajador: ")
         self.genero = validaGenero()
+
 
         # Gets the current roles
         listRoles = Rol.returnListaRol()
@@ -36,7 +38,7 @@ class Trabajador(Persona):
             print("\n----No se encuentran roles en el sistema----\n")
         else:
             print("Listado de roles en el sistema:")
-            print(f"{'ID':<10} {'Nombre':<20} {'Descripción':<30} {'Departamento':<20} {'Salario':<10}")
+            print(f"{"ID":<10} {"Nombre":<20} {"Descripción":<30} {"Departamento":<20} {"Salario":<10}")
             for rol in listRoles:
                 print(f"{rol[0]:<10} {rol[1]:<20} {rol[2]:<30} {rol[3]:<20} {rol[4]:<10.2f}")
         print("")        
@@ -84,15 +86,16 @@ class Trabajador(Persona):
 
         # Prints the current data
         print(f"Datos actuales del trabajador:")
-        print(f"{'ID':<15} {'Nombre':<20} {'Apellido 1':<20} {'Apellido 2':<20} {'Año nacimiento':<15} {'Genero':<10} {'Rol':<20}")
+        print(f"{"ID":<15} {"Nombre":<20} {"Apellido 1":<20} {"Apellido 2":<20} {"Año nacimiento":<15} {"Genero":<10} {"Rol":<20}")
         print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15} {dato[5]:<10} {dato[6]:<20}")
-
+        print()
         # New data validation
         nombre = validaString("Digite el nombre del trabajador: ")
         apell_1 = validaString("Digite el primer apellido del trabajador: ")
         apell_2 = validaString("Digite el segundo apellido del trabajador: ")
         anho_nacimiento = validaAnhoNacimiento("Digite el año de nacimiento del trabajador: ")
         genero = validaGenero()
+        print()
 
         # Gets the current roles
         listRoles = Rol.returnListaRol()
@@ -100,7 +103,7 @@ class Trabajador(Persona):
             print("\n----No se encuentran roles en el sistema.----\n")
         else:
             print("Listado de roles en el sistema:")
-            print(f"{'ID':<15} {'Nombre':<20} {'Descripción':<15} {'Departamento':<15} {'Salario':<10}")
+            print(f"{"ID":<15} {"Nombre":<20} {"Descripción":<15} {"Departamento":<15} {"Salario":<10}")
             for i in listRoles:
                 print(f"{i[0]:<15} {i[1]:<20} {i[2]:<15} {i[2]:<15} {i[3]:<10}")
         # In the next lines the role is selected and this selection is validated
@@ -155,10 +158,12 @@ class Trabajador(Persona):
         # Encabezado de la tabla
         else:
             print("Listado de trabajadores en el sistema:")
-            print(f"{'ID':<15} {'Nombre':<20} {'Apellido 1':<20} {'Apellido 2':<20} {'Año nacimiento':<15} {'Genero':<10} {'Rol':<20}")
+            print(f"{"ID":<15} {"Nombre":<20} {"Apellido 1":<20} {"Apellido 2":<20} {"Año nacimiento":<15} {"Genero":<10} {"Rol":<20}")
             # Imprimir cada fila de datos
             for i in datos:
                 print(f"{i[0]:<15} {i[1]:<20} {i[2]:<20} {i[3]:<20} {i[4]:<15} {i[5]:<10} {i[6]:<20}")
+
+                
     #Query to "delete" data from the database
     def desactiva(self, id):
         modificar = "UPDATE trabajador SET activo = %s, idRol = %s WHERE idTrabajador = %s"
@@ -170,7 +175,8 @@ class Trabajador(Persona):
         print("\n========================================\n")
 
     #Prints currently active workers
-    def trabajadoresActivos(self):
+    @staticmethod
+    def trabajadoresActivos():
         # Captures data
         Trabajador.miconexion.execute("""
             SELECT 

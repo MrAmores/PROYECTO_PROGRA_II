@@ -22,7 +22,7 @@ class Servicio:
                 Servicio.miconexion.execute(verificar_id, (self.idServicio,))
                 resultado = Servicio.miconexion.fetchone()
                 if resultado[0] > 0:
-                    print(f"\n----El ID '{self.idServicio}' ya existe. Por favor, ingrese un ID distinto---\n")
+                    print(f"\n----El ID {self.idServicio} ya existe. Por favor, ingrese un ID distinto---\n")
                 else:
                     break
             except ValueError:
@@ -65,8 +65,8 @@ class Servicio:
         except ValueError as e:
             print(f"\n----{e} Entrada inválida. Por favor, intente nuevamente----\n")
 
+    # Inserts a new service into the database
     def ingresaServicio(self):
-        # Inserts a new service into the database
         try:
             ingreso = "INSERT INTO servicio (idServicio, tipo, descripcion, precio) VALUES (%s, %s, %s, %s)"
             datos = (self.idServicio, self.tipo, self.descripcion, self.precio)
@@ -77,9 +77,10 @@ class Servicio:
             print("=========================================\n")
         except Exception as e:
             print(f"\n----Error inesperado: {e}. Por favor, intente nuevamente----\n")
-
+    
+    # Modifies an existing service in the database
     def modificaServicio(self):
-        # Modifies an existing service in the database
+
         try:
             while True:
                 id = validaIntPositivo("Digite un ID del servicio que desea modificar: ")
@@ -87,15 +88,14 @@ class Servicio:
                 Servicio.miconexion.execute(verificar_id, (id,))
                 resultado = Servicio.miconexion.fetchone()
                 if resultado[0] == 0:
-                    print(f"\n----El ID '{id}' no existe en la base de datos----\n")
+                    print(f"\n----El ID {id} no existe en la base de datos----\n")
                 else:
                     break
-            tipo=validaString("Digite el tipo: "),
+            tipo=validaString("Digite el tipo: ")
             descripcion=validaString("Digite la descripción: ")
             precio=float(validaFloatPositivo("Digite el precio: "))    
-            
             modificar = "UPDATE servicio SET tipo = %s, descripcion = %s, precio = %s WHERE idServicio = %s"
-            datos = (id, tipo, descripcion, precio)
+            datos = (tipo, descripcion, precio,id)
             Servicio.miconexion.execute(modificar, datos)
             Servicio.conexion.commit()
             print("\n=====================================================")
@@ -103,18 +103,20 @@ class Servicio:
             print("=====================================================\n")
         except Exception as e:
             print(f"\n----Error al modificar el servicio: {e}----\n")
-
+    
+    # Lists all services in the database
     def listar(self):
-        # Lists all services in the database
+        
         print("Listado de servicios:")
         Servicio.miconexion.execute("SELECT idServicio, tipo, descripcion, precio FROM servicio")
         servicios = Servicio.miconexion.fetchall()
-        print(f"{'ID':<10} {'Tipo':<15} {'Descripción':<30} {'Precio':<10}")
+        print(f"{"ID":<10} {"Tipo":<15} {"Descripción":<30} {"Precio":<10}")
         for servicio in servicios:
             print(f"{servicio[0]:<10} {servicio[1]:<15} {servicio[2]:<30} {servicio[3]:<10.2f}")
-
+    
+    # Deletes a service from the database
     def borraServicio(self, id):
-        # Deletes a service from the database
+        
         try:
             if id <= 0:
                 print("\n----El número de identificación debe ser un valor positivo----\n")
@@ -123,7 +125,7 @@ class Servicio:
             Servicio.miconexion.execute(verificar_id, (id,))
             resultado = Servicio.miconexion.fetchone()
             if resultado[0] == 0:
-                print(f"\n----El ID '{id}' no existe en la base de datos. No se puede eliminar----\n")
+                print(f"\n----El ID {id} no existe en la base de datos. No se puede eliminar----\n")
                 return False
             eliminar = "DELETE FROM servicio WHERE idServicio = %s"
             datos = (id,)
@@ -133,3 +135,11 @@ class Servicio:
             return True
         except Exception as e:
             print(f"\n----Error inesperado: {e}----\n")
+    
+    @staticmethod            
+    def select_servicio():
+        print("Listado de servicios:")
+        Servicio.miconexion.execute("SELECT idServicio, tipo, descripcion, precio FROM servicio")
+        servicios = Servicio.miconexion.fetchall()
+        return servicios
+                

@@ -39,12 +39,13 @@ class Rol:
 
     def capturaModR(self, id):
         # Captures new data to modify an existing role
-        Rol.miconexion.execute("SELECT * FROM rol WHERE idRol = '%s'" % id)
+        Rol.miconexion.execute("SELECT * FROM rol WHERE idRol = %s" % id)
         dato = Rol.miconexion.fetchone()
+        print("")
         print(f"Datos actuales del rol: ")  # Displays current data for the role
-        print(f"{'ID':<15} {'Nombre':<20} {'Descripción 1':<20} {'Departamento 2':<20} {'Salario':<15}")
-        for i in dato:
-            print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15}")
+        print(f"{"ID":<15} {"Nombre":<20} {"Descripción 1":<20} {"Departamento 2":<20} {"Salario":<15}")
+        print(f"{dato[0]:<15} {dato[1]:<20} {dato[2]:<20} {dato[3]:<20} {dato[4]:<15}")
+        print("")
 
         # Captures new data
         nombre = validaString("Digite el nombre del rol: ")
@@ -77,7 +78,7 @@ class Rol:
             print("\n----No se encuentran roles en el sistema.----\n")
         else:
             print("Listado de roles en el sistema:")
-            print(f"{'ID':<10} {'Nombre':<20} {'Descripción':<30} {'Departamento':<20} {'Salario':<10}")
+            print(f"{"ID":<10} {"Nombre":<20} {"Descripción":<30} {"Departamento":<20} {"Salario":<10}")
             for rol in datos:
                 print(f"{rol[0]:<10} {rol[1]:<20} {rol[2]:<30} {rol[3]:<20} {rol[4]:<10.2f}")
 
