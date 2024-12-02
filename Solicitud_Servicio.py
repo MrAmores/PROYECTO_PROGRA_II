@@ -83,9 +83,9 @@ class SoliServicio():
         datos = (self.idRegistro, self.idServicio, self.idTrabajador, self.fecha, self.hora)
         SoliServicio.miconexion.execute(consulta, datos)
         SoliServicio.conexion.commit()
-        print("\n=====================================================\n")
+        print("\n====================================================")
         print("Se ha ingresado la solicitud de servicio exitosamente.")
-        print("\n=====================================================\n")
+        print("=====================================================\n")
     
     # Print the information about passager, worker and services
     def listar(self):

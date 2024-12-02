@@ -50,7 +50,6 @@ def mostrar_menu_principal():
         except ValueError as e:
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")  # Error message for invalid input
 
-# Displays the passenger management menu and performs actions based on the user"s choice
 def mostrar_menu_pasajero():
     objPasajero = Pasajero(
         identificacion=None, nombre=None, apellido1=None, apellido2=None,

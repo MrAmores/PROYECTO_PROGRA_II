@@ -33,9 +33,9 @@ class Rol:
         datos = (self.idRol, self.nombre, self.descripcion, self.departamento, self.salario)
         Rol.miconexion.execute(ingreso, datos)
         Rol.conexion.commit()
-        print("\n==================================\n")
+        print("\n==================================")
         print("Se ha ingresado el rol exitosamente.")
-        print("\n==================================\n")
+        print("==================================\n")
 
     def capturaModR(self, id):
         # Captures new data to modify an existing role
@@ -66,9 +66,9 @@ class Rol:
         datos = (nombre, descripcion, departamento, salario, id)
         Rol.miconexion.execute(modificar, datos)
         Rol.conexion.commit()
-        print("\n===============================================\n")
+        print("\n===============================================")
         print("Se han modificado los datos del rol exitosamente.")
-        print("\n===============================================\n")
+        print("===============================================\n")
 
     def listaRol(self):
         # Lists all roles in the database
@@ -102,6 +102,6 @@ class Rol:
         consulta = "DELETE FROM rol WHERE idRol = %s"
         Rol.miconexion.execute(consulta, (id,))
         Rol.conexion.commit()
-        print("\n===============================\n")
+        print("\n===============================")
         print("Se ha borrado el rol exitosamente")
-        print("\n===============================\n")
+        print("===============================\n")
