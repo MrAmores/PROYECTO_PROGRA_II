@@ -142,3 +142,53 @@ class SoliServicio():
             except Exception as e:
                 print(f"Error al obtener el idRegistro: {e}")
                 return None
+
+    def listaWord(self):
+        self.miconexion.execute("""
+        SELECT 
+            ss.idSolicitud AS "Número de servicio",
+            CONCAT(p.nombre, ' ', p.apell_1, ' ', p.apell_2) AS "Nombre del cliente",
+            p.idPasajero AS "Identificación del cliente",
+            c.idCabina AS "Número de Cabina",
+            CONCAT(t.nombre, ' ', t.apell_1, ' ', t.apell_2) AS "Nombre del funcionario",
+            r.nombre AS "Rol del funcionario",
+            ss.fecha AS "Fecha de la solicitud",
+            ss.hora AS "Hora de la solicitud",
+            se.tipo AS "Servicio",
+            se.precio AS "Monto"
+        FROM 
+            SolicitudServicio ss
+        JOIN 
+            Registro reg ON ss.idRegistro = reg.idRegistro
+        JOIN 
+            Pasajero p ON reg.idPasajero = p.idPasajero
+        JOIN 
+            Cabina c ON reg.idCabina = c.idCabina
+        LEFT JOIN 
+            Trabajador t ON ss.idTrabajador = t.idTrabajador
+        LEFT JOIN 
+            Rol r ON t.idRol = r.idRol
+        JOIN 
+            Servicio se ON ss.idServicio = se.idServicio;
+        """)
+
+        listadoSoliServicio = self.miconexion.fetchall()
+        if not listadoSoliServicio:
+            return []
+        else:
+            listaDatos = []
+            for servicio in listadoSoliServicio:
+                fila = {
+                    "Número de servicio": servicio[0],
+                    "Nombre del cliente": servicio[1],
+                    "Identificación": servicio[2],
+                    "Cabina": servicio[3],
+                    "Funcionario": servicio[4],
+                    "Rol": servicio[5],
+                    "Fecha": servicio[6].strftime("%Y-%m-%d"),
+                    "Hora": str(servicio[7]),
+                    "Servicio": servicio[8],
+                    "Monto": servicio[9]
+                }
+                listaDatos.append(fila)
+            return listaDatos
