@@ -37,9 +37,9 @@ class Pasajero(Persona):
         datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.anhoNacimiento,self.genero,self.activo)
         Pasajero.miconexion.execute(ingreso, datos)  # Execute the query and enter data
         Pasajero.conexion.commit()
-        print("\n=====================================\n")
+        print("\n=====================================")
         print("Se ha ingresado al pasajero exitosamente.")
-        print("\n=====================================\n")
+        print("=====================================\n")
         
 
     def capturaDatosMod(self, id): # ABSTRACT METHOD 
@@ -73,9 +73,9 @@ class Pasajero(Persona):
         # Execute the query and modify data
         Pasajero.miconexion.execute(modificar, datos)
         Pasajero.conexion.commit()
-        print("\n====================================================\n")
+        print("\n====================================================")
         print("Se han modificado los datos del pasajero exitosamente.")
-        print("\n====================================================\n")
+        print("====================================================\n")
     
     def listaDatos(self):  # ABSTRACT METHOD
         print("\nListado de pasajeros en el sistema:\n")
