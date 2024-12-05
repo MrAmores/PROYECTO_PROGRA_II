@@ -62,9 +62,9 @@ class Trabajador(Persona):
         datos = (self.identificacion, self.nombre, self.apellido1, self.apellido2, self.anhoNacimiento,self.genero,self.activo,self.idRol)
         Trabajador.miconexion.execute(ingreso, datos)
         Trabajador.conexion.commit()
-        print("\n==========================================\n")
+        print("\n==========================================")
         print("Se ha ingresado al trabajador exitosamente.")
-        print("\n==========================================\n")
+        print("==========================================\n")
 
     #We capture data to do modifications
     def capturaDatosMod(self, id):
@@ -134,9 +134,9 @@ class Trabajador(Persona):
         datos = (nombre, apell_1, apell_2, anho_nacimiento, genero, idRol, id)
         Trabajador.miconexion.execute(modificar, datos)
         Trabajador.conexion.commit()
-        print("\n====================================================\n")
+        print("\n====================================================")
         print("Se han modificado los datos del trabajador exitosamente.")
-        print("\n====================================================\n")
+        print("====================================================\n")
 
     #Prints all information in the database
     def listaDatos(self):
@@ -170,9 +170,9 @@ class Trabajador(Persona):
         datos = (False, None, id)
         Trabajador.miconexion.execute(modificar, datos)
         Trabajador.conexion.commit()
-        print("\n========================================\n")
+        print("\n========================================")
         print("Se ha borrado el trabajador exitosamente.")
-        print("\n========================================\n")
+        print("========================================\n")
 
     #Prints currently active workers
     @staticmethod

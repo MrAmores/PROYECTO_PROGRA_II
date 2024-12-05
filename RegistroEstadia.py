@@ -75,9 +75,9 @@ class RegistroEstadia:
         datos=(idCabina, idPasajero, fechaEntrada, fechaSalida)
         RegistroEstadia.miconexion.execute(consulta, datos)
         RegistroEstadia.conexion.commit()
-        print("\n====================================================\n")
+        print("\n=======================================")
         print("Se ha registrado la estadía exitosamente.")
-        print("\n====================================================\n")
+        print("=========================================\n")
         
     # Methood to print the passager information
     def listar(self):

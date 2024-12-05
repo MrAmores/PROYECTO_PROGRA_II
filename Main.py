@@ -6,6 +6,7 @@ from Servicio import Servicio
 from RegistroEstadia import RegistroEstadia
 from Solicitud_Servicio import SoliServicio
 from Validaciones import *
+from CreacionDocumento import crearDocumento
 
 # Displays the main menu and directs to the corresponding submenu based on user input
 def mostrar_menu_principal():
@@ -49,7 +50,6 @@ def mostrar_menu_principal():
         except ValueError as e:
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")  # Error message for invalid input
 
-# Displays the passenger management menu and performs actions based on the user"s choice
 def mostrar_menu_pasajero():
     objPasajero = Pasajero(
         identificacion=None, nombre=None, apellido1=None, apellido2=None,
@@ -493,16 +493,19 @@ def mostrar_menu_solicitud_servicio():
         -------------------------------------------
         1 - Registrar Solicitud de Servicio
         2 - Listar Solicitudes de Servicio
-        3 - Volver al Menú Principal
+        3 - Generar word con las Solicitudes de Servicio
+        4 - Volver al Menú Principal
         -------------------------------------------
         """)
         try:
-            opcion = int(input("Seleccione una opción: ")) 
+            opcion = int(input("Seleccione una opción: "))
             if opcion == 1:
                 objSoliServicio.capturaDatos()
             elif opcion == 2:
                 objSoliServicio.listar()
             elif opcion == 3:
+                crearDocumento(objSoliServicio)
+            elif opcion == 4:
                 break
             else:
                 print("\n----Opción no válida. Intente de nuevo.----\n")
