@@ -484,7 +484,6 @@ def mostrar_menu_servicio():
             print(f"\n----Error: {e}. Intente ingresar un número válido----\n")  
 
 def mostrar_menu_solicitud_servicio():
-    #idSolicitud, idRegistro, idServicio, idTrabajador, fecha, hora
     objSoliServicio = SoliServicio(idSolicitud = None, idRegistro= None, idServicio= None, idTrabajador=None, fecha=None, hora= None)
     while True:
         print("""
@@ -531,7 +530,6 @@ def mostrar_menu_registro_pasajero_a_cabina():
             elif opcion == 2:
                 objRegistro.listar()
             elif opcion == 3:
-                # Exit to main menu
                 break
             else:
                 print("\n----Opción no válida. Intente de nuevo.----\n")
